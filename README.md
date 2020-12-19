@@ -12,3 +12,6 @@ cd AES67-Monitor
 npm install
 npm start
 ```
+
+## License notice
+This repository contains code under the MIT License from [twbs/bootstrap](https://github.com/twbs/bootstrap).
