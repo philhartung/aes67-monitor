@@ -46,7 +46,6 @@
 										</select>
 									</td>
 									<td><button class="btn btn-sm btn-success" :disabled="parseRTPmap(stream) === false" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
-
 									<td><button class="btn btn-sm btn-primary" :disabled="parseRTPmap(stream) === false" v-on:click="detailHandler(stream)">Details</button></td>
 								</tr>
 							</tbody>
