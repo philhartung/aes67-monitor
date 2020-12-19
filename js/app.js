@@ -15,7 +15,8 @@ var app = new Vue({
 		settings: {},
 		network: [],
 		audiodevices: [],
-		current: {}
+		current: {},
+		filterString: ""
 	},
 	methods: {
 		parseRTPmap: function(stream){
@@ -133,6 +134,13 @@ var app = new Vue({
 				audio.start(mcast, channels, channel1, channel2);
 				app.audio = stream.id;
 			}
+		},
+		filterStream: function(stream){
+			if(app.filterString == ""){
+				return true;
+			}
+
+			return stream.name.toLowerCase().indexOf(app.filterString.toLowerCase()) !== -1 || app.getMcast(stream).indexOf(app.filterString.toLowerCase()) !== -1 || stream.origin['unicast-address'].indexOf(app.filterString.toLowerCase()) !== -1;
 		}
 	}
 });

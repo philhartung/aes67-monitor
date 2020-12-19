@@ -15,7 +15,7 @@
 					<span v-for="error in errors">{{ error }}<br /></span>
 				</div>
 				<div>
-					<h4 class="d-inline-block">SDP Sessions</h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings';">Settings</button>
+					<div class="header"><h4 class="d-inline-block">SDP Sessions</h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings';">Settings</button><input class="form-control form-control-sm d-inline-block float-right" id="filter" type="text" v-model="filterString" placeholder="Filter streams" /></div>
 					<div class="alert alert-primary" role="alert" v-if="sdp.length == 0">Waiting for SDP Messages</div>
 					<div class="table-responsive">
 						<table id="table-sdp" class="table table-sm" v-if="sdp.length > 0">
@@ -33,7 +33,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }">
+								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream)">
 									<td>{{ stream.name }}</td>
 									<td><span v-if="stream.keywds == 'Dante'" class="badge badge-primary">Dante</span></td>
 									<td>{{ stream['sess-info'] ? stream['sess-info'] : '-' }}</td>
@@ -54,7 +54,7 @@
 				</div>
 			</div>
 			<div id="settings" v-if="page == 'settings'">
-				<h4 class="d-inline-block">Settings</h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
+				<div class="header"><h4 class="d-inline-block">Settings</h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button></div>
 				<hr />
 				<div class="form-group" style="width:400px">
 					<label for="network">Network interface</label>
@@ -70,7 +70,7 @@
 				</div>
 			</div>
 			<div id="detail" v-if="page == 'detail'">
-				<h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
+				<div class="header"><h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button></div>
 				<hr />
 				<div class="row">
 					<div class="col">

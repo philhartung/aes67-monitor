@@ -4,6 +4,21 @@ body{
 	overflow-x: hidden;
 }
 
+div.header{
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 42px;
+	background: white;
+	padding: 5px;
+	padding-right: 10px;
+	z-index: 1000;
+}
+
+#app{
+	margin-top: 42px;
+}
+
 #table-sdp td {
 	line-height: 28px;
 }
@@ -18,4 +33,9 @@ hr{
 
 button.btn-filter {
 	margin-bottom: 5px;
+}
+
+input#filter{
+	width: 250px;
+	margin-right: 8px;
 }
