@@ -4,7 +4,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . AES67 --overwrite"
+    "build": "electron-packager . AES67 --overwrite --icon=./img/icon"
   },
   "devDependencies": {
     "electron": "^9.0.2"
