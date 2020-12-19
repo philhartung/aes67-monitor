@@ -8,6 +8,7 @@ Here is a screenshot of how the main window of the app looks currently:
 ## Installation
 ```
 git clone https://github.com/philhartung/AES67-Monitor.git
+cd AES67-Monitor
 npm install
 npm start
 ```
