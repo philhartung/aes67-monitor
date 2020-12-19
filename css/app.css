@@ -4,6 +4,10 @@ body{
 	overflow-x: hidden;
 }
 
+hr{
+	margin-top: 0;
+}
+
 div.header{
 	position: fixed;
 	top: 0;
@@ -25,10 +29,6 @@ div.header{
 
 [v-cloak] {
   display:none;
-}
-
-hr{
-	margin-top: 0;
 }
 
 button.btn-filter {

@@ -31,6 +31,10 @@ var app = new Vue({
 				return false;
 			}
 
+			if(parseInt(rtpFormat[2]) > 8){
+				return false;
+			}
+
 			return rtpmap[1];
 		},
 		getMedia: function(stream){
