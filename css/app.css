@@ -11,7 +11,7 @@ div.header{
 	height: 42px;
 	background: white;
 	padding: 5px;
-	padding-right: 10px;
+	padding-right: 15px;
 	z-index: 1000;
 }
 
@@ -37,5 +37,9 @@ button.btn-filter {
 
 input#filter{
 	width: 250px;
+	margin-right: 8px;
+}
+
+button#save{
 	margin-right: 8px;
 }

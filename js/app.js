@@ -140,7 +140,12 @@ var app = new Vue({
 				return true;
 			}
 
-			return stream.name.toLowerCase().indexOf(app.filterString.toLowerCase()) !== -1 || app.getMcast(stream).indexOf(app.filterString.toLowerCase()) !== -1 || stream.origin['unicast-address'].indexOf(app.filterString.toLowerCase()) !== -1;
+			var filterString = app.filterString.toLowerCase().trim();
+
+			return stream.name.toLowerCase().indexOf(filterString) !== -1 || app.getMcast(stream).indexOf(filterString) !== -1 || stream.origin['unicast-address'].indexOf(filterString) !== -1;
+		},
+		saveSettings: function(){
+			app.page = 'sdp';
 		}
 	}
 });
