@@ -1,0 +1,21 @@
+body{
+	padding: 1vh;
+	user-select: none;
+	overflow-x: hidden;
+}
+
+#table-sdp td {
+	line-height: 28px;
+}
+
+[v-cloak] {
+  display:none;
+}
+
+hr{
+	margin-top: 0;
+}
+
+button.btn-filter {
+	margin-bottom: 5px;
+}

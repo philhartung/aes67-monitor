@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>AES67 Stream Monitor</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/app.css">
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<div id="sdp" v-if="page == 'sdp'">
+				<div id="errors" class="alert alert-danger" v-if="errors.length > 0">
+					<span v-for="error in errors">{{ error }}<br /></span>
+				</div>
+				<div>
+					<h4 class="d-inline-block">SDP Sessions</h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings';">Settings</button>
+					<div class="alert alert-primary" role="alert" v-if="sdp.length == 0">Waiting for SDP Messages</div>
+					<div class="table-responsive">
+						<table id="table-sdp" class="table table-sm" v-if="sdp.length > 0">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th></th>
+									<th>Info</th>
+									<th>Device Address</th>
+									<th>Multicast Address</th>
+									<th>Media format</th>
+									<th>Channel</th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }">
+									<td>{{ stream.name }}</td>
+									<td><span v-if="stream.keywds == 'Dante'" class="badge badge-primary">Dante</span></td>
+									<td>{{ stream['sess-info'] ? stream['sess-info'] : '-' }}</td>
+									<td>{{ stream.origin['unicast-address'] }}</td>
+									<td>{{ getMcast(stream) }}</td>
+									<td>{{ getMedia(stream) }}</td>
+									<td>
+										<select class="form-control form-control-sm" :disabled="parseRTPmap(stream) === false || audio == stream.id" v-model="selected[stream.id]">
+											<option v-for="channel in getChannels(stream)" v-bind:value="channel.val">{{ channel.name }}</option>
+										</select>
+									</td>
+									<td><button class="btn btn-sm btn-success" :disabled="parseRTPmap(stream) === false" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
+
+									<td><button class="btn btn-sm btn-primary" :disabled="parseRTPmap(stream) === false" v-on:click="detailHandler(stream)">Details</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="settings" v-if="page == 'settings'">
+				<h4 class="d-inline-block">Settings</h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
+				<hr />
+				<div class="form-group" style="width:400px">
+					<label for="network">Network interface</label>
+					<select class="form-control" v-model="settings.addr" id="network">
+						<option v-for="addr in network" v-bind:value="addr">{{ addr }}</option>
+					</select>
+				</div>
+				<div class="form-group" style="width:400px">
+					<label for="audiodevice">Audiodevice</label>
+					<select class="form-control" v-model="settings.device" id="audiodevice">
+						<option v-for="device in audiodevices" v-bind:value="device.id">{{ device.name }}</option>
+					</select>
+				</div>
+			</div>
+			<div id="detail" v-if="page == 'detail'">
+				<h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
+				<hr />
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<h6 for="sdpraw">Raw SDP</h6>
+							<textarea class="form-control" id="sdpraw" rows="24" readonly>{{ current.sdpRaw }}</textarea>
+						</div>
+					</div>
+					<div class="col">
+						<h6>Audio Visualization</h6>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'ebur')">ebur128</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'spectrum')">Spectrum</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'ahistogram')">ahistogram</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'avectorscope')">avectorscope</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'showcqt')">showcqt</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'showfreqs')">showfreqs</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'showspatial')">showspatial</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'abitscope')">abitscope</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'showwaves')">showwaves</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'aphasemeter')">aphasemeter</button>
+						<button class="btn btn-sm btn-primary btn-filter" :disabled="parseRTPmap(current) === false" v-on:click="filter(current, 'showvolume')">showvolume</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/jquery.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/app.js"></script>
+	</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "AES67",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-packager . AES67 --overwrite"
+  },
+  "devDependencies": {
+    "electron": "^9.0.2"
+  },
+  "dependencies": {
+    "audify": "^1.5.2",
+    "jquery": "^3.5.1",
+    "vue": "^2.6.11"
+  }
+}
