@@ -19,8 +19,9 @@ To build a binary for your system, simply run:
 git clone https://github.com/philhartung/aes67-monitor.git
 cd aes67-monitor
 npm install
-npm run-script build
+npm run build
 ```
+This will create a folder for your platform and CPU architecture, containing the binary.
 
 ## License and copyright notice
 This repository contains code under the MIT License from [twbs/bootstrap](https://github.com/twbs/bootstrap).
