@@ -13,5 +13,5 @@ npm install
 npm start
 ```
 
-## License notice
+## License and copyright notice
 This repository contains code under the MIT License from [twbs/bootstrap](https://github.com/twbs/bootstrap).
