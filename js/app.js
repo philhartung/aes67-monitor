@@ -1,7 +1,6 @@
 var Vue = require('vue/dist/vue.js');
 var sdp = require('./js/sdp');
 var audio = require('./js/audio');
-var filter = require('./js/filter');
 var os = require('os');
 var { RtAudio, RtAudioApi } = require('audify');
 
@@ -75,13 +74,6 @@ var app = new Vue({
 
 			return mcast;
 		},
-		filter: function(stream, type){
-			var mcast = app.getMcast(stream);
-			var rtpmap = app.getMedia(stream).split('/');
-			var windowTitle = stream.name+(stream['sess-info'] ? ' ('+stream['sess-info']+')':'');
-
-			filter.launchFilter(mcast, 5004, rtpmap[1], rtpmap[2], type, windowTitle);
-		},
 		detailHandler: function(stream){
 			app.current = stream;
 			app.page = 'detail';
@@ -153,6 +145,7 @@ var addresses = [];
 
 for(var i = 0; i < interfaceNames.length; i++){
 	var interface = interfaces[interfaceNames[i]];
+
 	for(var j = 0; j < interface.length; j++){
 		if(interface[j].family == 'IPv4' && interface[j].address != '127.0.0.1'){
 			addresses.push(interface[j].address);
