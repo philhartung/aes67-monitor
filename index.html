@@ -33,20 +33,20 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream)">
+								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && parseRTPmap(stream) !== false">
 									<td>{{ stream.name }}</td>
-									<td><span v-if="stream.keywds == 'Dante'" class="badge badge-primary">Dante</span></td>
+									<td><span v-if="stream.keywds == 'Dante'" class="badge badge-secondary">Dante</span></td>
 									<td>{{ stream['sess-info'] ? stream['sess-info'] : '-' }}</td>
 									<td>{{ stream.origin['unicast-address'] }}</td>
 									<td>{{ getMcast(stream) }}</td>
 									<td>{{ getMedia(stream) }}</td>
 									<td>
-										<select class="form-control form-control-sm" :disabled="parseRTPmap(stream) === false || audio == stream.id" v-model="selected[stream.id]">
+										<select class="form-control form-control-sm" :disabled="audio == stream.id" v-model="selected[stream.id]">
 											<option v-for="channel in getChannels(stream)" v-bind:value="channel.val">{{ channel.name }}</option>
 										</select>
 									</td>
-									<td><button class="btn btn-sm btn-success" :disabled="parseRTPmap(stream) === false" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
-									<td><button class="btn btn-sm btn-primary" :disabled="parseRTPmap(stream) === false" v-on:click="detailHandler(stream)">Details</button></td>
+									<td><button class="btn btn-sm btn-success" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
+									<td><button class="btn btn-sm btn-primary" v-on:click="detailHandler(stream)">Details</button></td>
 								</tr>
 							</tbody>
 						</table>
