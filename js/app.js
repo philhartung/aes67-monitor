@@ -189,9 +189,12 @@ for(var i = 0; i < devices.length; i++){
 }
 
 if(app.audiodevices.length == 0){
-	app.errors.push('No audio device found! Please connect an audio device and restart the app.');
-}else{
+	app.errors.push('No valid audio device found! Please connect an audio device and restart the app.');
+}else if(devices[rtAudio.getDefaultOutputDevice()].outputChannels >= 2){
 	app.settings.device = rtAudio.getDefaultOutputDevice();
+	audio.initAudio(app.settings.audioapi, app.settings.device, 0);
+}else{
+	app.settings.device = app.audiodevices[0].id;
 	audio.initAudio(app.settings.audioapi, app.settings.device, 0);
 }
 
