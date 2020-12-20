@@ -231,9 +231,17 @@ setInterval(function(){
 			app.selected[id] = channels[0].val;
 		}
 	}
-}, 500);
+
+	setTimeout(function(){
+		app.filtered = $('tbody > tr').length;
+	}, 30);
+}, 5000);
 
 //vuejs behaves weird doing the same, lets do it with jquery
 $('input#filter').on('keydown', function(){
+	app.filtered = $('tbody > tr').length;
+});
+
+$('input#filter').on('keyup', function(){
 	app.filtered = $('tbody > tr').length;
 });
