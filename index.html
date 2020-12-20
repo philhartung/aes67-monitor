@@ -15,11 +15,11 @@
 					<span v-for="error in errors">{{ error }}<br /></span>
 				</div>
 				<div>
-					<div class="header"><h4 class="d-inline-block">Streams <span class="badge badge-primary">{{ sdp.length }}</span></h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings';">Settings</button><input class="form-control form-control-sm d-inline-block float-right" id="filter" type="text" v-model="filterString" placeholder="Filter streams" /></div>
+					<div class="header"><h4 class="d-inline-block">Streams <span class="badge badge-primary"><span v-if="filterString != ''">{{ filtered }}/</span>{{ sdp.length }}</span></h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings';">Settings</button><input class="form-control form-control-sm d-inline-block float-right" id="filter" type="text" v-model="filterString" placeholder="Filter streams" /></div>
 					<div class="alert alert-primary" role="alert" v-if="sdp.length == 0">Waiting for SDP Messages</div>
 					<div class="table-responsive">
 						<table id="table-sdp" class="table table-sm" v-if="sdp.length > 0">
-							<thead>
+							<thead v-if="filtered > 0">
 								<tr>
 									<th>Name</th>
 									<th></th>
@@ -51,6 +51,7 @@
 							</tbody>
 						</table>
 					</div>
+					<div class="alert alert-primary" role="alert" v-if="filtered == 0 && sdp.length > 0 && filterString != ''">No matchings streams.</div>
 				</div>
 			</div>
 			<div id="settings" v-if="page == 'settings'">

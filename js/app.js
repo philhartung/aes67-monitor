@@ -17,7 +17,8 @@ var app = new Vue({
 		network: [],
 		audiodevices: [],
 		current: {},
-		filterString: ""
+		filterString: "",
+		filtered: 0
 	},
 	methods: {
 		parseRTPmap: function(stream){
@@ -231,3 +232,8 @@ setInterval(function(){
 		}
 	}
 }, 500);
+
+//vuejs behaves weird doing the same, lets do it with jquery
+$('input#filter').on('keyup', function(){
+	app.filtered = $('tbody > tr').length;
+});
