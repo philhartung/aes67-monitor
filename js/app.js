@@ -13,6 +13,7 @@ var app = new Vue({
 		audio: 0,
 		page: 'sdp',
 		settings: {},
+		currentSettings: {},
 		network: [],
 		audiodevices: [],
 		current: {},
