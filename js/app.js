@@ -147,7 +147,8 @@ var app = new Vue({
 				return true;
 			}
 
-			return stream.name.toLowerCase().indexOf(filterString) !== -1 || app.getMcast(stream).indexOf(filterString) !== -1 || stream.origin['unicast-address'].indexOf(filterString) !== -1;
+			var info = stream['sess-info'] ? stream['sess-info'].toLowerCase() : '';
+			return stream.name.toLowerCase().indexOf(filterString) !== -1 || app.getMcast(stream).indexOf(filterString) !== -1 || stream.origin['unicast-address'].indexOf(filterString) !== -1 || info.indexOf(filterString) !== -1;
 		},
 		saveSettings: function(){
 			app.page = 'sdp';
