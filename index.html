@@ -46,7 +46,7 @@
 										</select>
 									</td>
 									<td><button class="btn btn-sm btn-success" :disabled="parseRTPmap(stream) === false" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
-									<td><button class="btn btn-sm btn-primary" :disabled="parseRTPmap(stream) === false" v-on:click="detailHandler(stream)">Details</button></td>
+									<td><button class="btn btn-sm btn-primary" v-on:click="detailHandler(stream)">Details</button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -59,29 +59,43 @@
 				<hr />
 				<div class="row">
 					<div class="col-4">
+						<h6>Network settings</h6><hr>
 						<div class="form-group">
 							<label for="network">Network interface</label>
 							<select class="form-control" v-model="currentSettings.addr" id="network">
 								<option v-for="addr in network" v-bind:value="addr">{{ addr }}</option>
 							</select>
 						</div>
+					</div>
+					<div class="col-4">
+						<h6>Audio settings <small>(not implemented yet)</small></h6><hr>
 						<div class="form-group">
 							<label for="audiodevice">Audiodevice</label>
 							<select class="form-control" v-model="currentSettings.device" id="audiodevice" disabled>
 								<option v-for="device in audiodevices" v-bind:value="device.id">{{ device.name }}</option>
 							</select>
 						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" v-model="currentSettings.jitterBuffer" id="jitterbuffer" disabled>
+							<label class="form-check-label" for="jitterbuffer">
+								Use RTP buffering
+							</label>
+						</div>
+						<div class="input-group">
+							<input class="form-control" type="number" v-model="currentSettings.jitterBufferTime" :disabled="!currentSettings.jitterBuffer || true" />
+							<div class="input-group-append">
+								<span class="input-group-text">packets</span>
+							</div>
+						</div>
 					</div>
 					<div class="col-4">
+						<h6>Other</h6><hr>
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" v-model="currentSettings.hideStreams" id="hideStreams">
 							<label class="form-check-label" for="hideStreams">
 								Hide unsupported streams
 							</label>
 						</div>
-					</div>
-					<div class="col-4">
-						...
 					</div>
 				</div>
 
@@ -91,8 +105,8 @@
 					<h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4>
 
 					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
-					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'">Listen</button>
-					<select class="form-control form-control-sm d-inline-block float-right" id="listen" :disabled="audio == current.id" v-model="selected[current.id]">
+					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'" :disabled="parseRTPmap(current) === false">Listen</button>
+					<select class="form-control form-control-sm d-inline-block float-right" id="listen" :disabled="audio == current.id || parseRTPmap(current) === false" v-model="selected[current.id]">
 						<option v-for="channel in getChannels(current)" v-bind:value="channel.val">{{ channel.name }}</option>
 					</select>
 				</div>

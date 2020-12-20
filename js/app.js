@@ -12,7 +12,7 @@ var app = new Vue({
 		selected: {},
 		audio: 0,
 		page: 'sdp',
-		settings: {hideStreams: true},
+		settings: {hideStreams: true, jitterBuffer: true, jitterBufferTime: 10},
 		currentSettings: {},
 		network: [],
 		audiodevices: [],
@@ -155,11 +155,8 @@ var app = new Vue({
 			//stop audio???
 
 			if(bool){
-				console.log('saving');
 				app.settings = JSON.parse(JSON.stringify(app.currentSettings));
-				console.log(app.settings);
 			}else{
-				console.log('not saving');
 				app.currentSettings = JSON.parse(JSON.stringify(app.settings));
 			}
 
@@ -254,15 +251,9 @@ setInterval(function(){
 	}
 }, 5000);
 
-//vuejs behaves weird doing the same, lets do it with jquery
-$('input#filter').on('keydown', function(){
-	app.filtered = $('tbody > tr').length;
-});
-
-$('input#filter').on('keyup', function(){
-	app.filtered = $('tbody > tr').length;
-
-	setTimeout(function(){
+//own update stuff, because vuejs is weird and wont render it properly
+setInterval(function(){
+	if(app.page == 'sdp'){
 		app.filtered = $('tbody > tr').length;
-	}, 15);
-});
+	}
+}, 50);
