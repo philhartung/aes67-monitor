@@ -70,7 +70,15 @@
 				</div>
 			</div>
 			<div id="detail" v-if="page == 'detail'">
-				<div class="header"><h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button></div>
+				<div class="header">
+					<h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4>
+
+					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
+					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'">Listen</button>
+					<select class="form-control form-control-sm d-inline-block float-right" id="listen" :disabled="audio == current.id" v-model="selected[current.id]">
+						<option v-for="channel in getChannels(current)" v-bind:value="channel.val">{{ channel.name }}</option>
+					</select>
+				</div>
 				<hr />
 				<div class="row">
 					<div class="col-7">

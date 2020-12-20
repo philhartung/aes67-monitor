@@ -43,3 +43,12 @@ input#filter{
 button#save{
 	margin-right: 8px;
 }
+
+select#listen {
+	width: 150px;
+	margin-right: 8px;
+}
+
+button#listen {
+	margin-right: 8px;
+}
