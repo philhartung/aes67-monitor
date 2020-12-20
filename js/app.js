@@ -12,7 +12,7 @@ var app = new Vue({
 		selected: {},
 		audio: 0,
 		page: 'sdp',
-		settings: {},
+		settings: {hideStreams: true},
 		currentSettings: {},
 		network: [],
 		audiodevices: [],
@@ -151,7 +151,20 @@ var app = new Vue({
 			var info = stream['sess-info'] ? stream['sess-info'].toLowerCase() : '';
 			return stream.name.toLowerCase().indexOf(filterString) !== -1 || app.getMcast(stream).indexOf(filterString) !== -1 || stream.origin['unicast-address'].indexOf(filterString) !== -1 || info.indexOf(filterString) !== -1;
 		},
-		saveSettings: function(){
+		saveSettings: function(bool){
+			//stop audio???
+
+			if(bool){
+				console.log('saving');
+				app.settings = JSON.parse(JSON.stringify(app.currentSettings));
+				console.log(app.settings);
+			}else{
+				console.log('not saving');
+				app.currentSettings = JSON.parse(JSON.stringify(app.settings));
+			}
+
+			//restart audio???
+
 			app.page = 'sdp';
 		}
 	}
@@ -218,6 +231,8 @@ if(app.audiodevices.length == 0){
 	audio.initAudio(app.settings.audioapi, app.settings.device, 0);
 }
 
+app.currentSettings = app.settings;
+
 //set interval to pull sdp client for updates
 setInterval(function(){
 	app.sdp = sdp.getSessions();
@@ -232,9 +247,11 @@ setInterval(function(){
 		}
 	}
 
-	setTimeout(function(){
-		app.filtered = $('tbody > tr').length;
-	}, 30);
+	if(app.page == 'sdp'){
+		setTimeout(function(){
+			app.filtered = $('tbody > tr').length;
+		}, 30);
+	}
 }, 5000);
 
 //vuejs behaves weird doing the same, lets do it with jquery
@@ -244,4 +261,8 @@ $('input#filter').on('keydown', function(){
 
 $('input#filter').on('keyup', function(){
 	app.filtered = $('tbody > tr').length;
+
+	setTimeout(function(){
+		app.filtered = $('tbody > tr').length;
+	}, 15);
 });

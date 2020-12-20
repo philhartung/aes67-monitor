@@ -33,7 +33,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && parseRTPmap(stream) !== false">
+								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && (parseRTPmap(stream) !== false || !settings.hideStreams)">
 									<td>{{ stream.name }}</td>
 									<td><span v-if="stream.keywds == 'Dante'" class="badge badge-secondary">Dante</span></td>
 									<td>{{ stream['sess-info'] ? stream['sess-info'] : '-' }}</td>
@@ -41,12 +41,12 @@
 									<td>{{ getMcast(stream) }}</td>
 									<td>{{ getMedia(stream) }}</td>
 									<td>
-										<select class="form-control form-control-sm" :disabled="audio == stream.id" v-model="selected[stream.id]">
+										<select class="form-control form-control-sm" :disabled="parseRTPmap(stream) === false || audio == stream.id" v-model="selected[stream.id]">
 											<option v-for="channel in getChannels(stream)" v-bind:value="channel.val">{{ channel.name }}</option>
 										</select>
 									</td>
-									<td><button class="btn btn-sm btn-success" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
-									<td><button class="btn btn-sm btn-primary" v-on:click="detailHandler(stream)">Details</button></td>
+									<td><button class="btn btn-sm btn-success" :disabled="parseRTPmap(stream) === false" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
+									<td><button class="btn btn-sm btn-primary" :disabled="parseRTPmap(stream) === false" v-on:click="detailHandler(stream)">Details</button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -55,20 +55,36 @@
 				</div>
 			</div>
 			<div id="settings" v-if="page == 'settings'">
-				<div class="header"><h4 class="d-inline-block">Settings</h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Cancel</button><button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-on:click="saveSettings()">Save</button></div>
+				<div class="header"><h4 class="d-inline-block">Settings</h4><button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="saveSettings(false)">Cancel</button><button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-on:click="saveSettings(true)">Save</button></div>
 				<hr />
-				<div class="form-group" style="width:400px">
-					<label for="network">Network interface</label>
-					<select class="form-control" v-model="settings.addr" id="network">
-						<option v-for="addr in network" v-bind:value="addr">{{ addr }}</option>
-					</select>
+				<div class="row">
+					<div class="col-4">
+						<div class="form-group">
+							<label for="network">Network interface</label>
+							<select class="form-control" v-model="currentSettings.addr" id="network">
+								<option v-for="addr in network" v-bind:value="addr">{{ addr }}</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="audiodevice">Audiodevice</label>
+							<select class="form-control" v-model="currentSettings.device" id="audiodevice" disabled>
+								<option v-for="device in audiodevices" v-bind:value="device.id">{{ device.name }}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" v-model="currentSettings.hideStreams" id="hideStreams">
+							<label class="form-check-label" for="hideStreams">
+								Hide unsupported streams
+							</label>
+						</div>
+					</div>
+					<div class="col-4">
+						...
+					</div>
 				</div>
-				<div class="form-group" style="width:400px">
-					<label for="audiodevice">Audiodevice</label>
-					<select class="form-control" v-model="settings.device" id="audiodevice" disabled>
-						<option v-for="device in audiodevices" v-bind:value="device.id">{{ device.name }}</option>
-					</select>
-				</div>
+
 			</div>
 			<div id="detail" v-if="page == 'detail'">
 				<div class="header">
