@@ -19,7 +19,7 @@
 					<div class="alert alert-primary" role="alert" v-if="sdp.length == 0">Waiting for SDP Messages</div>
 					<div class="table-responsive">
 						<table id="table-sdp" class="table table-sm" v-if="sdp.length > 0">
-							<thead v-if="filtered > 0">
+							<thead v-if="filtered > 0 || (sdp.length > 0 && filterString == '')">
 								<tr>
 									<th>Name</th>
 									<th></th>

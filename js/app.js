@@ -234,6 +234,6 @@ setInterval(function(){
 }, 500);
 
 //vuejs behaves weird doing the same, lets do it with jquery
-$('input#filter').on('keyup', function(){
+$('input#filter').on('keydown', function(){
 	app.filtered = $('tbody > tr').length;
 });
