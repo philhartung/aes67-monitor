@@ -140,11 +140,11 @@ var app = new Vue({
 			}
 		},
 		filterStream: function(stream){
-			if(app.filterString == ""){
+			var filterString = app.filterString.toLowerCase().trim();
+
+			if(filterString == ""){
 				return true;
 			}
-
-			var filterString = app.filterString.toLowerCase().trim();
 
 			return stream.name.toLowerCase().indexOf(filterString) !== -1 || app.getMcast(stream).indexOf(filterString) !== -1 || stream.origin['unicast-address'].indexOf(filterString) !== -1;
 		},
