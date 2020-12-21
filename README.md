@@ -13,7 +13,7 @@ npm install
 ```
 The app should then be installed.  Audify (audio backend used) prebuilds are available for most major platforms and Node versions. If you need to build Audify from source, see https://github.com/almogh52/audify#requirements-for-source-build.
 
-After installation you an start the app with `npm start`.
+After installation you can start the app with `npm start`.
 
 ## Building
 To build a binary for your system, first install the app and then run:
