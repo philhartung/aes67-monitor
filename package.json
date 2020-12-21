@@ -7,7 +7,8 @@
     "build": "electron-packager . AES67 --overwrite --icon=./assets/icon"
   },
   "devDependencies": {
-    "electron": "^9.0.2"
+    "electron": "^9.0.2",
+    "electron-packager": "^15.2.0"
   },
   "dependencies": {
     "audify": "^1.5.2",
