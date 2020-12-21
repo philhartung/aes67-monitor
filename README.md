@@ -1,5 +1,5 @@
 # AES67 Monitor App
-Cross plattform AES67 monitoring app. It still is in early development.
+Cross plattform AES67 monitoring app.
 
 Here is a screenshot of how the main window of the app looks currently:
 ![Screenshot](doc/screenshot.png "Screenshot")
@@ -21,6 +21,18 @@ To build a binary for your system, first install the app and then run:
 npm run build
 ```
 This will create a folder for your platform and CPU architecture, containing the binary.
+
+## Status
+This app is still in early development. Some things that need to be reworked before a more stable release include, but are not limited to:
+ * rewrite RTP audio backend to support more audio formats (it is currently limited to 48000Hz L24 at 48 samples/packet)
+ * rewrite SDP module and SAP backend
+ * proper support for settings
+ 
+ Also I would like to add more features such as:
+  * dBFS and LUFS metering
+  * possibility to add streams from raw sdp
+  * RTP packet monitoring (like seqnum, timestamp, etc)
+ 
 
 ## License and copyright notice
 This repository contains code under the MIT License from [twbs/bootstrap](https://github.com/twbs/bootstrap).
