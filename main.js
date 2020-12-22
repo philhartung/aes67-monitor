@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
-const audio = require('./js/audioNew');
+const audio = require('./js/audio');
 
 function createWindow () {
 	const win = new BrowserWindow({

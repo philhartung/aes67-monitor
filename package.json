@@ -1,6 +1,7 @@
 {
   "name": "aes67-monitor",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "Cross plattform AES67 monitoring app.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
