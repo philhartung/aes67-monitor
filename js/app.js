@@ -24,7 +24,7 @@ let app = new Vue({
 	methods: {
 		getChannels: function(stream){			
 			if(!stream.isSupported){
-				return ['unsupported'];
+				return [{name:'unsupported'}];
 			}
 
 			var channels = [];
@@ -74,6 +74,10 @@ let app = new Vue({
 					case 'M6': channel1 = 5; channel2 = 5; break;
 					case 'M7': channel1 = 6; channel2 = 6; break;
 					case 'M8': channel1 = 7; channel2 = 7; break;
+				}
+
+				if(audioProcess && !audioProcess.killed){
+					audioProcess.kill();
 				}
 
 				app.audio = stream.id;
