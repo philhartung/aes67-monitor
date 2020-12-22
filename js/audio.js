@@ -5,26 +5,26 @@ const args = JSON.parse(process.argv[2]);
 const client = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
 //set up constants for lates use
-const fpp = (args.samplerate / 1000) * args.ptime;
+const samplesPerPacket = (args.samplerate / 1000) * args.ptime;
 const bytesPerSample = (args.codec == 'L24' ? 3 : 2);
-const expectedPacketSize = 12 + (fpp * bytesPerSample * args.channels);
-const out = Buffer.alloc(fpp * 4);
+const pcmDataSize = (samplesPerPacket * bytesPerSample * args.channels);
+const pcmL16out = Buffer.alloc(samplesPerPacket * 4);
 
 client.on('listening', function() {
 	client.addMembership(args.mcast, args.networkInterface);
 });
 
 client.on('message', function(buffer, remote) {
-	if(buffer.length != expectedPacketSize || remote.address != args.addr){
+	if(buffer.length != (expectedPCMDataSize + 12) || remote.address != args.addr){
 		return;
 	}
 
-	for(let sample = 0; sample < fpp; sample++){
-		out.writeUInt16LE(buffer.readUInt16BE((sample * args.channels + args.ch1Map) * bytesPerSample + 12), sample * 4);
-		out.writeUInt16LE(buffer.readUInt16BE((sample * args.channels + args.ch2Map) * bytesPerSample + 12), sample * 4 + 2);
+	for(let sample = 0; sample < samplesPerPacket; sample++){
+		pcmL16out.writeUInt16LE(buffer.readUInt16BE((sample * args.channels + args.ch1Map) * bytesPerSample + 12), sample * 4);
+		pcmL16out.writeUInt16LE(buffer.readUInt16BE((sample * args.channels + args.ch2Map) * bytesPerSample + 12), sample * 4 + 2);
 	}
 
-	rtAudio.write(out);
+	rtAudio.write(pcmL16out);
 });
 
 //init audio api
