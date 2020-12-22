@@ -15,7 +15,7 @@ client.on('listening', function() {
 });
 
 client.on('message', function(buffer, remote) {
-	if(buffer.length != (expectedPCMDataSize + 12) || remote.address != args.addr){
+	if(buffer.length != (pcmDataSize + 12) || remote.address != args.addr){
 		return;
 	}
 
@@ -29,7 +29,7 @@ client.on('message', function(buffer, remote) {
 
 //init audio api
 const rtAudio = new RtAudio(args.audioAPI);
-rtAudio.openStream({deviceId: args.audioDevice, nChannels: 2, firstChannel: 0}, null, RtAudioFormat.RTAUDIO_SINT16, args.samplerate, fpp, "AES67 Monitor");
+rtAudio.openStream({deviceId: args.audioDevice, nChannels: 2, firstChannel: 0}, null, RtAudioFormat.RTAUDIO_SINT16, args.samplerate, samplesPerPacket, "AES67 Monitor");
 rtAudio.start();
 
 //init network stuff
