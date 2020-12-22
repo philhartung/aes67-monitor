@@ -4,11 +4,11 @@ const dgram = require('dgram');
 const args = JSON.parse(process.argv[2]);
 const client = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
-//set up variables for lates use
-let fpp = (args.samplerate/1000) * args.ptime;
-let bytesPerSample = (args.codec == 'L24' ? 3 : 2);
-let expectedPacketSize = 12 + (fpp * bytesPerSample * args.channels);
-let out = Buffer.alloc(fpp * 4);
+//set up constants for lates use
+const fpp = (args.samplerate / 1000) * args.ptime;
+const bytesPerSample = (args.codec == 'L24' ? 3 : 2);
+const expectedPacketSize = 12 + (fpp * bytesPerSample * args.channels);
+const out = Buffer.alloc(fpp * 4);
 
 client.on('listening', function() {
 	client.addMembership(args.mcast, args.networkInterface);
@@ -28,7 +28,7 @@ client.on('message', function(buffer, remote) {
 });
 
 //init audio api
-let rtAudio = new RtAudio(args.audioAPI);
+const rtAudio = new RtAudio(args.audioAPI);
 rtAudio.openStream({deviceId: args.audioDevice, nChannels: 2, firstChannel: 0}, null, RtAudioFormat.RTAUDIO_SINT16, args.samplerate, fpp, "AES67 Monitor");
 rtAudio.start();
 
