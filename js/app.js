@@ -112,7 +112,7 @@ let app = new Vue({
 			}
 
 			//restart audio if settings changed
-
+			
 			//set ip for sdp
 			sdp.setNetworkInterface(app.settings.addr);
 			app.page = 'sdp';
