@@ -100,10 +100,6 @@ exports.setNetworkInterface = function(address){
 }
 
 exports.getSessions = function(){
-	return Object.keys(sessions).map(function(key){return sessions[key];});
-}
-
-setInterval(function(){
 	let keys = Object.keys(sessions);
 
 	for(let i = 0; i < keys.length; i++){		
@@ -111,4 +107,6 @@ setInterval(function(){
 			delete sessions[keys[i]];
 		}
 	}
-}, 60000);
+
+	return keys.map(function(key){return sessions[key];});
+}
