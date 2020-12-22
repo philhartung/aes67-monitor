@@ -33,19 +33,19 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && (parseRTPmap(stream) !== false || !settings.hideStreams)">
+								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && (stream.isValid || !settings.hideStreams)">
 									<td>{{ stream.name }}</td>
 									<td><span v-if="stream.keywds == 'Dante'" class="badge badge-secondary">Dante</span></td>
-									<td>{{ stream['sess-info'] ? stream['sess-info'] : '-' }}</td>
-									<td>{{ stream.origin['unicast-address'] }}</td>
-									<td>{{ getMcast(stream) }}</td>
-									<td>{{ getMedia(stream) }}</td>
+									<td>{{ stream.description }}</td>
+									<td>{{ stream.origin.address }}</td>
+									<td>{{ stream.mcast }}</td>
+									<td>{{ stream.rtpMap }}</td>
 									<td>
-										<select class="form-control form-control-sm" :disabled="parseRTPmap(stream) === false || audio == stream.id" v-model="selected[stream.id]">
+										<select class="form-control form-control-sm" :disabled="!stream.isValid || audio == stream.id" v-model="selected[stream.id]">
 											<option v-for="channel in getChannels(stream)" v-bind:value="channel.val">{{ channel.name }}</option>
 										</select>
 									</td>
-									<td><button class="btn btn-sm btn-success" :disabled="parseRTPmap(stream) === false" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
+									<td><button class="btn btn-sm btn-success" :disabled="!stream.isValid" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
 									<td><button class="btn btn-sm btn-primary" v-on:click="detailHandler(stream)">Details</button></td>
 								</tr>
 							</tbody>
@@ -105,8 +105,8 @@
 					<h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4>
 
 					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
-					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'" :disabled="parseRTPmap(current) === false">Listen</button>
-					<select class="form-control form-control-sm d-inline-block float-right" id="listen" :disabled="audio == current.id || parseRTPmap(current) === false" v-model="selected[current.id]">
+					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'" :disabled="!current.isValid">Listen</button>
+					<select class="form-control form-control-sm d-inline-block float-right" id="listen" :disabled="audio == current.id || !current.isValid" v-model="selected[current.id]">
 						<option v-for="channel in getChannels(current)" v-bind:value="channel.val">{{ channel.name }}</option>
 					</select>
 				</div>
@@ -118,7 +118,7 @@
 					<div class="col-5">
 						<div class="form-group">
 							<h6 for="sdpraw">Raw SDP</h6>
-							<textarea class="form-control" id="sdpraw" rows="24" readonly>{{ current.sdpRaw }}</textarea>
+							<textarea class="form-control" id="sdpraw" rows="24" readonly>{{ current.raw }}</textarea>
 						</div>
 					</div>
 				</div>

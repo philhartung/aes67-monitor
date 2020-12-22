@@ -21,65 +21,24 @@ var app = new Vue({
 		filtered: 0
 	},
 	methods: {
-		parseRTPmap: function(stream){
-			if(stream.media.length != 1){
-				return false;
-			}
-
-			var rtpmap = stream.media[0].rtpmap.split(' ');
-			var rtpFormat = rtpmap[1].split('/');
-
-			if(rtpFormat[0] != 'L24' || rtpFormat[1] != '48000' || parseInt(rtpFormat[2]) == NaN){
-				return false;
-			}
-
-			if(parseInt(rtpFormat[2]) > 8){
-				return false;
-			}
-
-			return rtpmap[1];
-		},
-		getMedia: function(stream){
-			var rtp = app.parseRTPmap(stream);
-			return rtp !== false ? rtp : 'unsupported format';
-		},
-		getChannels: function(stream){
-			var rtp = app.parseRTPmap(stream);
-			
-			if(rtp === false){
+		getChannels: function(stream){			
+			if(!stream.isValid){
 				return ['unsupported'];
 			}
 
-			var rtpSplit = rtp.split('/');
-
-			var channelCount = parseInt(rtpSplit[2]);
 			var channels = [];
 
 			//stereo
-			for(var i = 1; i < channelCount; i+=2){
+			for(var i = 1; i < stream.channels; i+=2){
 				channels.push({name: i+' + '+(i+1)+' Stereo', val: 'S'+i});
 			}
 
 			//mono
-			for(var i = 1; i <= channelCount; i++){
+			for(var i = 1; i <= stream.channels; i++){
 				channels.push({name: i+' Mono', val: 'M'+i});
 			}
 
 			return channels;
-		},
-		getMcast: function(stream){
-			var media = stream.media[0];
-			var mcast;
-
-			if(media.connection){
-				var conn = media.connection.address.split('/');
-				mcast = conn[0];
-			}else{
-				var conn = stream.connection.address.split('/');
-				mcast = conn[0];
-			}
-
-			return mcast;
 		},
 		detailHandler: function(stream){
 			app.current = stream;
@@ -91,38 +50,17 @@ var app = new Vue({
 				//stop audio
 				audio.stop();
 			}else{
-				var channel = app.selected[stream.id];
-				var media = stream.media[0];
+				var channelMapping = app.selected[stream.id];
 
-				if(stream.media.length != 1){
+				if(!stream.isValid){
 					console.error('unsupported media format');
 					return;
 				}
 
-				let mcast = app.getMcast(stream);
-				let port;
-				let format;
-				let samplerate;
-				let channels;
+				var channel1 = 0;
+				var channel2 = 0;
 
-				var rtpmap = media.rtpmap.split(' ');
-				port = parseInt(media.port);
-
-				if(rtpmap.length != 2){
-					console.error('unsupported rtpmap (more than one media format???)');
-					return;
-				}
-
-				var rtpMedia = rtpmap[1].split('/');
-
-				format = rtpMedia[0];
-				samplerate = parseInt(rtpMedia[1]);
-				channels = parseInt(rtpMedia[2]);
-
-				var channel1 = 1;
-				var channel2 = 1;
-
-				switch(channel){
+				switch(channelMapping){
 					case 'S1': channel1 = 0; channel2 = 1; break;
 					case 'S3': channel1 = 2; channel2 = 3; break;
 					case 'S5': channel1 = 4; channel2 = 5; break;
@@ -137,7 +75,7 @@ var app = new Vue({
 					case 'M8': channel1 = 7; channel2 = 7; break;
 				}
 
-				audio.start(mcast, channels, channel1, channel2);
+				audio.start(stream.mcast, stream.channels, channel1, channel2);
 				app.audio = stream.id;
 			}
 		},
@@ -148,20 +86,19 @@ var app = new Vue({
 				return true;
 			}
 
-			var info = stream['sess-info'] ? stream['sess-info'].toLowerCase() : '';
-			return stream.name.toLowerCase().indexOf(filterString) !== -1 || app.getMcast(stream).indexOf(filterString) !== -1 || stream.origin['unicast-address'].indexOf(filterString) !== -1 || info.indexOf(filterString) !== -1;
+			return stream.filterBy.indexOf(filterString) !== -1;
 		},
 		saveSettings: function(bool){
-			//stop audio???
-
 			if(bool){
 				app.settings = JSON.parse(JSON.stringify(app.currentSettings));
 			}else{
 				app.currentSettings = JSON.parse(JSON.stringify(app.settings));
 			}
 
-			//restart audio???
+			//restart audio if settings changed
 
+			//set ip for sdp
+			sdp.setNetworkInterface(app.settings.addr);
 			app.page = 'sdp';
 		}
 	}
@@ -191,7 +128,7 @@ if(addresses.length == 0){
 app.settings.addr = addresses[0];
 app.network = addresses;
 audio.setNetworkInterface(addresses[0]);
-sdp.setNetworkInterface(addresses[0]);
+sdp.init(addresses[0]);
 
 //init audio
 switch(process.platform){
@@ -243,13 +180,7 @@ setInterval(function(){
 			app.selected[id] = channels[0].val;
 		}
 	}
-
-	if(app.page == 'sdp'){
-		setTimeout(function(){
-			app.filtered = $('tbody > tr').length;
-		}, 30);
-	}
-}, 5000);
+}, 1000);
 
 //own update stuff, because vuejs is weird and wont render it properly
 setInterval(function(){
