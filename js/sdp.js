@@ -12,7 +12,6 @@ const preParse = function(sdp){
 	sdp.dante = (sdp.keywords == 'Dante');
 
 	//get multicast from connection
-	
 	if(sdp.media[0] && sdp.media[0].connection && sdp.media[0].connection.ip){
 		sdp.mcast = sdp.media[0].connection.ip.split('/')[0];
 	}else if(sdp.connection && sdp.connection.ip){
@@ -22,10 +21,10 @@ const preParse = function(sdp){
 		sdp.isValid = false;
 	}
 
-	sdp.description = sdp.description ? sdp.description : '-';
-
 	//put all filter relevant stuff into one string (name, description, multicast, unicast host)
-	sdp.filterBy = (sdp.name+' '+sdp.description+' '+sdp.mcast+' '+sdp.origin.address).toLowerCase();
+	sdp.filterBy = (sdp.name+' '+sdp.origin.address+' '+(sdp.description ? sdp.description+' ' : '')+sdp.mcast).toLowerCase();
+
+	sdp.description = sdp.description ? sdp.description : '-';
 
 	if(sdp.isValid){
 		sdp.codec = sdp.media[0].rtp[0].codec;

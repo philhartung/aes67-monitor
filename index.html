@@ -35,7 +35,7 @@
 							<tbody>
 								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && (stream.isValid || !settings.hideStreams)">
 									<td>{{ stream.name }}</td>
-									<td><span v-if="stream.keywds == 'Dante'" class="badge badge-secondary">Dante</span></td>
+									<td><span v-if="stream.dante" class="badge badge-secondary">Dante</span></td>
 									<td>{{ stream.description }}</td>
 									<td>{{ stream.origin.address }}</td>
 									<td>{{ stream.mcast }}</td>
