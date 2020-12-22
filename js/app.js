@@ -22,7 +22,7 @@ var app = new Vue({
 	},
 	methods: {
 		getChannels: function(stream){			
-			if(!stream.isValid){
+			if(!stream.isSupported){
 				return ['unsupported'];
 			}
 
@@ -52,7 +52,7 @@ var app = new Vue({
 			}else{
 				var channelMapping = app.selected[stream.id];
 
-				if(!stream.isValid){
+				if(!stream.isSupported){
 					console.error('unsupported media format');
 					return;
 				}
