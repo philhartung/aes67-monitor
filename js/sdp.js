@@ -71,12 +71,13 @@ socket.on('message', function(message, rinfo) {
 		return;
 	}
 
-	let sdpRaw = message.toString('ascii', 24);
-	let sdp = sdpTransform.parse(sdpRaw);
+	let rawSDP = message.toString('ascii', 24);
+	let sdp = sdpTransform.parse(rawSDP);
 
-	sdp.raw = sdpRaw;
+	sdp.raw = rawSDP;
 	sdp.id = crypto.createHash('md5').update(JSON.stringify(sdp.origin)).digest('hex');
 	sdp.lastSeen = Date.now();
+	sdp.manual = false;
 
 	sessions[sdp.id] = preParse(sdp);
 });
@@ -103,10 +104,24 @@ exports.getSessions = function(){
 	let keys = Object.keys(sessions);
 
 	for(let i = 0; i < keys.length; i++){		
-		if((Date.now() - sessions[keys[i]].lastSeen) > 5 * 60 * 1000){
+		if((Date.now() - sessions[keys[i]].lastSeen) > 5 * 60 * 1000 && !sessions[keys[i]].manual){
 			delete sessions[keys[i]];
 		}
 	}
 
 	return keys.map(function(key){return sessions[key];});
+}
+
+exports.addStream = function(rawSDP){
+	let sdp = sdpTransform.parse(rawSDP);
+
+	sdp.raw = rawSDP;
+	sdp.id = crypto.createHash('md5').update(JSON.stringify(sdp.origin)).digest('hex');
+	sdp.manual = true;
+
+	sessions[sdp.id] = preParse(sdp);
+}
+
+exports.deleteStream = function(id){
+	delete sessions[id];
 }
