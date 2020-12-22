@@ -24,9 +24,9 @@ This will create a folder for your platform and CPU architecture, containing the
 
 ## Status
 This app is still in early development. Some things that need to be reworked before a more stable release include, but are not limited to:
- * rewrite RTP audio backend to support more audio formats (it is currently limited to 48000Hz L24 at 48 samples/packet and quite buggy, also add the option for buffering)
+ * ~~rewrite RTP audio backend to support more audio formats (it is currently limited to 48000Hz L24 at 48 samples/packet and quite buggy, also add the option for buffering)~~ Add the option for buffering to audio backend
  * ~~rewrite SDP module and SAP backend~~ Done
- * proper support for settings
+ * ~~proper support for settings~~ Supports all implemented settings, buffering settings are disabled because buffering is not yet implemented in the audio backend
  
  Also I would like to add more features such as:
   * dBFS and LUFS metering
