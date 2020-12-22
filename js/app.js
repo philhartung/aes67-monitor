@@ -13,7 +13,7 @@ let app = new Vue({
 		selected: {},
 		audio: 0,
 		page: 'sdp',
-		settings: {hideStreams: true, jitterBuffer: true, jitterBufferTime: 10},
+		settings: {hideStreams: true, jitterBuffer: true, jitterBufferTime: 16},
 		currentSettings: {},
 		network: [],
 		audiodevices: [],

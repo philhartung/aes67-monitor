@@ -4,12 +4,19 @@ const dgram = require('dgram');
 const args = JSON.parse(process.argv[2]);
 const client = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
+//other constants
+const bufferSize = 1024;
+const jitterBufferSize = args.jitterBufferEnabled ? args.jitterBufferSize : 0;
+
 //set up constants for lates use
 const samplesPerPacket = Math.round((args.samplerate / 1000) * args.ptime);
 const bytesPerSample = (args.codec == 'L24' ? 3 : 2);
 const pcmDataSize = (samplesPerPacket * bytesPerSample * args.channels);
 const packetSize = pcmDataSize + 12;
-const pcmL16out = Buffer.alloc(samplesPerPacket * 4);
+const pcmL16out = Buffer.alloc(samplesPerPacket * 4 * bufferSize);
+
+//vars
+let seqInternal = -1;
 
 client.on('listening', function() {
 	client.addMembership(args.mcast, args.networkInterface);
@@ -20,12 +27,25 @@ client.on('message', function(buffer, remote) {
 		return;
 	}
 
+	let seqNum = buffer.readUInt16BE(2);
+	let bufferIndex = (seqNum % bufferSize) * samplesPerPacket * 4;
+
 	for(let sample = 0; sample < samplesPerPacket; sample++){
-		pcmL16out.writeUInt16LE(buffer.readUInt16BE((sample * args.channels + args.ch1Map) * bytesPerSample + 12), sample * 4);
-		pcmL16out.writeUInt16LE(buffer.readUInt16BE((sample * args.channels + args.ch2Map) * bytesPerSample + 12), sample * 4 + 2);
+		pcmL16out.writeUInt16LE(buffer.readUInt16BE((sample * args.channels + args.ch1Map) * bytesPerSample + 12), sample * 4 + bufferIndex);
+		pcmL16out.writeUInt16LE(buffer.readUInt16BE((sample * args.channels + args.ch2Map) * bytesPerSample + 12), sample * 4 + bufferIndex + 2);
 	}
 
-	rtAudio.write(pcmL16out);
+	if(seqInternal != -1){
+		let bufferIndex = seqInternal * samplesPerPacket * 4;
+		let outBuf = pcmL16out.slice(bufferIndex, bufferIndex + samplesPerPacket * 4)
+		rtAudio.write(outBuf);
+		seqInternal = (seqInternal + 1) % bufferSize
+	}else{
+		seqInternal = (seqNum - jitterBufferSize) % bufferSize;
+		for(var j = 0; j < jitterBufferSize; j++){
+			rtAudio.write(Buffer.alloc(samplesPerPacket * 4));
+		}
+	}
 });
 
 //init audio api
@@ -36,3 +56,8 @@ rtAudio.start();
 //init network stuff
 //client.bind(5004, args.addr); //wont work, needs more testing
 client.bind(5004);
+
+//kill process on disconnect
+process.on('disconnect', function(){
+	process.exit();
+});
