@@ -68,10 +68,10 @@
 						</div>
 					</div>
 					<div class="col-4">
-						<h6>Audio <small>(not implemented yet)</small></h6><hr>
+						<h6>Audio</h6><hr>
 						<div class="form-group">
 							<label for="audiodevice">Audiodevice</label>
-							<select class="form-control" v-model="currentSettings.device" id="audiodevice" disabled>
+							<select class="form-control" v-model="currentSettings.device" id="audiodevice">
 								<option v-for="device in audiodevices" v-bind:value="device.id">{{ device.name }}</option>
 							</select>
 						</div>

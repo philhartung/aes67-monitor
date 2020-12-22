@@ -1,10 +1,11 @@
-var Vue = require('vue/dist/vue.js');
-var sdp = require('./js/sdp');
-var audio = require('./js/audio');
-var os = require('os');
-var { RtAudio, RtAudioApi } = require('audify');
+const Vue = require('vue/dist/vue.js');
+const { fork } = require('child_process');
+const sdp = require('./js/sdp');
+const os = require('os');
+const { RtAudio, RtAudioApi } = require('audify');
+let audioProcess;
 
-var app = new Vue({
+let app = new Vue({
 	el: '#app',
 	data: {
 		sdp: [],
@@ -48,7 +49,7 @@ var app = new Vue({
 			if(stream.id == app.audio){
 				app.audio = 0;
 				//stop audio
-				audio.stop();
+				audioProcess.kill();
 			}else{
 				var channelMapping = app.selected[stream.id];
 
@@ -75,8 +76,23 @@ var app = new Vue({
 					case 'M8': channel1 = 7; channel2 = 7; break;
 				}
 
-				audio.start(stream.mcast, stream.channels, channel1, channel2);
 				app.audio = stream.id;
+				audioProcess = fork('./js/audio', [JSON.stringify({
+					mcast: stream.mcast,
+					port: stream.media[0].port,
+					addr: stream.origin.address,
+					codec: stream.codec,
+					ptime: stream.media[0].ptime,
+					samplerate: stream.samplerate,
+					channels: stream.channels,
+					ch1Map: channel1,
+					ch2Map: channel2,
+					jitterBufferEnabled: app.settings.jitterBuffer,
+					jitterBufferSize: app.settings.jitterBufferTime,
+					audioAPI: app.settings.audioapi,
+					audioDevice: app.settings.device,
+					networkInterface: app.settings.addr
+				})]);
 			}
 		},
 		filterStream: function(stream){
@@ -127,7 +143,6 @@ if(addresses.length == 0){
 
 app.settings.addr = addresses[0];
 app.network = addresses;
-audio.setNetworkInterface(addresses[0]);
 sdp.init(addresses[0]);
 
 //init audio
@@ -159,10 +174,8 @@ if(app.audiodevices.length == 0){
 	app.errors.push('No valid audio device found! Please connect an audio device and restart the app.');
 }else if(devices[rtAudio.getDefaultOutputDevice()].outputChannels >= 2){
 	app.settings.device = rtAudio.getDefaultOutputDevice();
-	audio.initAudio(app.settings.audioapi, app.settings.device, 0);
 }else{
 	app.settings.device = app.audiodevices[0].id;
-	audio.initAudio(app.settings.audioapi, app.settings.device, 0);
 }
 
 app.currentSettings = app.settings;
