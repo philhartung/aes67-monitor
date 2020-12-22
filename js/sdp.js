@@ -8,7 +8,7 @@ let sessions = {};
 
 const preParse = function(sdp){
 	//check if valid for playback
-	sdp.isValid = isValidAES67(sdp);
+	sdp.isSupported = isSupportedStream(sdp);
 	sdp.dante = (sdp.keywords == 'Dante');
 
 	//get multicast from connection
@@ -18,7 +18,7 @@ const preParse = function(sdp){
 		sdp.mcast = sdp.connection.ip.split('/')[0];
 	}else{
 		sdp.mcast = '-';
-		sdp.isValid = false;
+		sdp.isSupported = false;
 	}
 
 	//put all filter relevant stuff into one string (name, description, multicast, unicast host)
@@ -26,7 +26,7 @@ const preParse = function(sdp){
 
 	sdp.description = sdp.description ? sdp.description : '-';
 
-	if(sdp.isValid){
+	if(sdp.isSupported){
 		sdp.codec = sdp.media[0].rtp[0].codec;
 		sdp.samplerate = sdp.media[0].rtp[0].rate;
 		sdp.channels = sdp.media[0].rtp[0].encoding;
@@ -38,7 +38,7 @@ const preParse = function(sdp){
 	return sdp;
 }
 
-const isValidAES67 = function(sdp){
+const isSupportedStream = function(sdp){
 	if(sdp.media.length != 1){
 		return false;
 	}

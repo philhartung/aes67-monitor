@@ -33,7 +33,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && (stream.isValid || !settings.hideStreams)">
+								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && (stream.isSupported || !settings.hideStreams)">
 									<td>{{ stream.name }}</td>
 									<td><span v-if="stream.dante" class="badge badge-secondary">Dante</span></td>
 									<td>{{ stream.description }}</td>
@@ -41,11 +41,11 @@
 									<td>{{ stream.mcast }}</td>
 									<td>{{ stream.rtpMap }}</td>
 									<td>
-										<select class="form-control form-control-sm" :disabled="!stream.isValid || audio == stream.id" v-model="selected[stream.id]">
+										<select class="form-control form-control-sm" :disabled="!stream.isSupported || audio == stream.id" v-model="selected[stream.id]">
 											<option v-for="channel in getChannels(stream)" v-bind:value="channel.val">{{ channel.name }}</option>
 										</select>
 									</td>
-									<td><button class="btn btn-sm btn-success" :disabled="!stream.isValid" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
+									<td><button class="btn btn-sm btn-success" :disabled="!stream.isSupported" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
 									<td><button class="btn btn-sm btn-primary" v-on:click="detailHandler(stream)">Details</button></td>
 								</tr>
 							</tbody>
@@ -105,8 +105,8 @@
 					<h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4>
 
 					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
-					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'" :disabled="!current.isValid">Listen</button>
-					<select class="form-control form-control-sm d-inline-block float-right" id="listen" :disabled="audio == current.id || !current.isValid" v-model="selected[current.id]">
+					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'" :disabled="!current.isSupported">Listen</button>
+					<select class="form-control form-control-sm d-inline-block float-right" id="listen" :disabled="audio == current.id || !current.isSupported" v-model="selected[current.id]">
 						<option v-for="channel in getChannels(current)" v-bind:value="channel.val">{{ channel.name }}</option>
 					</select>
 				</div>
