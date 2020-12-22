@@ -1,9 +1,8 @@
 const Vue = require('vue/dist/vue.js');
-const { fork } = require('child_process');
+const { ipcRenderer } = require('electron');
 const sdp = require('./js/sdp');
 const os = require('os');
 const { RtAudio, RtAudioApi } = require('audify');
-let audioProcess;
 
 let app = new Vue({
 	el: '#app',
@@ -48,8 +47,7 @@ let app = new Vue({
 		audioHandler: function(stream){
 			if(stream.id == app.audio){
 				app.audio = 0;
-				//stop audio
-				audioProcess.kill();
+				ipcRenderer.send('asynMessage', 'stop');
 			}else{
 				var channelMapping = app.selected[stream.id];
 
@@ -75,13 +73,10 @@ let app = new Vue({
 					case 'M7': channel1 = 6; channel2 = 6; break;
 					case 'M8': channel1 = 7; channel2 = 7; break;
 				}
-
-				if(audioProcess && !audioProcess.killed){
-					audioProcess.kill();
-				}
-
+				
+				ipcRenderer.send('asynMessage', 'stop');
 				app.audio = stream.id;
-				audioProcess = fork('./js/audio', [JSON.stringify({
+				ipcRenderer.send('asynMessage', JSON.stringify({
 					mcast: stream.mcast,
 					port: stream.media[0].port,
 					addr: stream.origin.address,
@@ -96,7 +91,7 @@ let app = new Vue({
 					audioAPI: app.settings.audioapi,
 					audioDevice: app.settings.device,
 					networkInterface: app.settings.addr
-				})]);
+				}));
 			}
 		},
 		filterStream: function(stream){
