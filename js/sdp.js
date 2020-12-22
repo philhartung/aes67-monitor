@@ -51,7 +51,7 @@ const isSupportedStream = function(sdp){
 		return false;
 	}
 
-	if(sdp.media[0].rtp[0].rate != 48000 && sdp.media[0].rtp[0].rate != 44100){
+	if(sdp.media[0].rtp[0].rate != 48000 && sdp.media[0].rtp[0].rate != 44100 && sdp.media[0].rtp[0].rate != 96000){
 		return false;
 	}
 

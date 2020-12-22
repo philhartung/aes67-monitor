@@ -5,9 +5,10 @@ const args = JSON.parse(process.argv[2]);
 const client = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
 //set up constants for lates use
-const samplesPerPacket = (args.samplerate / 1000) * args.ptime;
+const samplesPerPacket = Math.round((args.samplerate / 1000) * args.ptime);
 const bytesPerSample = (args.codec == 'L24' ? 3 : 2);
 const pcmDataSize = (samplesPerPacket * bytesPerSample * args.channels);
+const packetSize = pcmDataSize + 12;
 const pcmL16out = Buffer.alloc(samplesPerPacket * 4);
 
 client.on('listening', function() {
@@ -15,7 +16,7 @@ client.on('listening', function() {
 });
 
 client.on('message', function(buffer, remote) {
-	if(buffer.length != (pcmDataSize + 12) || remote.address != args.addr){
+	if(buffer.length != packetSize || remote.address != args.addr){
 		return;
 	}
 
