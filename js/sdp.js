@@ -23,10 +23,13 @@ const preParse = function(sdp){
 		sdp.isSupported = false;
 	}
 
-	//put all filter relevant stuff into one string (name, description, multicast, unicast host)
-	sdp.filterBy = (sdp.name+' '+sdp.origin.address+' '+(sdp.description ? sdp.description+' ' : '')+sdp.mcast).toLowerCase();
-
 	sdp.description = sdp.description ? sdp.description : '-';
+	if(sdp.description == '-' && sdp.media[0].description){
+		sdp.description = sdp.media[0].description;
+	}
+
+	//put all filter relevant stuff into one string (name, description, multicast, unicast host)
+	sdp.filterBy = (sdp.name+' '+sdp.origin.address+' '+sdp.description+' '+sdp.mcast).toLowerCase();
 
 	if(sdp.isSupported){
 		sdp.codec = sdp.media[0].rtp[0].codec;

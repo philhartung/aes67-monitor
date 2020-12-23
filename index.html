@@ -129,12 +129,20 @@
 				<hr />
 				<div class="row">
 					<div class="col-7">
-						<h6>...</h6>
+						<h6>Details</h6>
+						<div><b>Device address:</b> {{current.origin.address}}</div>
+						<div><b>Multicast address:</b> {{current.mcast}}:{{current.media[0].port}}</div>
+						<div><b>Samplerate:</b> {{current.samplerate}}Hz</div>
+						<div><b>Packettime:</b> {{current.media[0].ptime}}ms</div>
+						<div><b>Audio channels:</b> {{current.channels}}</div>
+						<div><b>Codec:</b> {{current.codec}}</div>
+						<!--div><b>Predicted bitrate:</b> {{  }}</div-->
+						<div v-if="current.media[0].tsRefClocks && current.media[0].tsRefClocks[0].clksrcExt && current.media[0].tsRefClocks[0].clksrc == 'ptp'"><b>PTP clocksource:</b> {{current.media[0].tsRefClocks[0].clksrcExt}}</div>
 					</div>
 					<div class="col-5">
 						<div class="form-group">
 							<h6 for="sdpraw">Raw SDP</h6>
-							<textarea class="form-control" id="sdpraw" rows="24" :readonly="!current.manual">{{ current.raw }}</textarea>
+							<textarea class="form-control" id="sdpraw" rows="23" :readonly="!current.manual">{{ current.raw }}</textarea>
 						</div>
 					</div>
 				</div>
@@ -144,7 +152,7 @@
 					<h4 class="d-inline-block">Add Stream manually</h4>
 					
 					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings';">Cancel</button>
-					<button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-on:click="addSDPHandler()">Save</button>
+					<button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-on:click="addSDPHandler()">Add</button>
 				</div>
 				<hr />
 				<span>Paste SDP data below</span>
