@@ -100,6 +100,10 @@ socket.on('message', function(message, rinfo) {
 	sdp.id = crypto.createHash('md5').update(JSON.stringify(sdp.origin)).digest('hex');
 	sdp.lastSeen = Date.now();
 	sdp.manual = false;
+	
+	if(sessions[sdp.id] && sessions[sdp.id].manual === true){
+		return;
+	}
 
 	sessions[sdp.id] = preParse(sdp);
 });
