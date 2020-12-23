@@ -92,7 +92,7 @@
 								<span class="input-group-text">packets</span>
 							</div>
 						</div>
-						<small v-if="audio != 0">Playback needs to be restarted for these settings to become active</small>
+						<small v-if="audio != 0">Playback needs to be restarted for audio settings to become active</small>
 					</div>
 					<div class="col-4">
 						<h6>Other</h6><hr>
@@ -126,7 +126,7 @@
 					<div class="col-5">
 						<div class="form-group">
 							<h6 for="sdpraw">Raw SDP</h6>
-							<textarea class="form-control" id="sdpraw" rows="24" readonly>{{ current.raw }}</textarea>
+							<textarea class="form-control" id="sdpraw" rows="24" :readonly="!current.manual">{{ current.raw }}</textarea>
 						</div>
 					</div>
 				</div>
@@ -135,7 +135,7 @@
 				<div class="header">
 					<h4 class="d-inline-block">Add Stream manually</h4>
 					
-					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Cancel</button>
+					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings';">Cancel</button>
 					<button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-on:click="addSDPHandler()">Save</button>
 				</div>
 				<hr />

@@ -115,6 +115,10 @@ exports.getSessions = function(){
 exports.addStream = function(rawSDP){
 	let sdp = sdpTransform.parse(rawSDP);
 
+	if(!sdp.origin || !sdp.name){
+		return;
+	}
+
 	sdp.raw = rawSDP;
 	sdp.id = crypto.createHash('md5').update(JSON.stringify(sdp.origin)).digest('hex');
 	sdp.manual = true;
