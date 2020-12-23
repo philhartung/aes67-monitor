@@ -1,9 +1,10 @@
 # AES67 Monitor App
 Cross plattform AES67 monitoring app.
 
-Here is a screenshot of how the main window of the app looks currently:
+Here are some screenshots of how the app looks:
 ![Screenshot](doc/screenshot.png "Screenshot")
-
+![Screenshot](doc/details.png "Screenshot details")
+![Screenshot](doc/settings.png "Screenshot settings")
 
 ## Installation
 ```
