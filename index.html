@@ -30,12 +30,16 @@
 									<th>Channel</th>
 									<th></th>
 									<th></th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr v-for="stream in sdp" v-if="filterStream(stream) && (stream.isSupported || !settings.hideStreams)">
 									<td>{{ stream.name }}</td>
-									<td><span v-if="stream.dante" class="badge badge-secondary">Dante</span></td>
+									<td>
+										<span v-if="stream.dante" class="badge badge-secondary">Dante</span>
+										<span v-if="stream.manual" class="badge badge-secondary">Manual</span>
+									</td>
 									<td>{{ stream.description }}</td>
 									<td>{{ stream.origin.address }}</td>
 									<td>{{ stream.mcast }}</td>
@@ -47,6 +51,7 @@
 									</td>
 									<td><button class="btn btn-sm btn-success" :disabled="!stream.isSupported" v-on:click="audioHandler(stream)" v-bind:class="{ 'btn-success': (audio != stream.id), 'btn-danger': (audio == stream.id) }" v-html="stream.id == audio ? 'Stop' : 'Listen'">Listen</button></td>
 									<td><button class="btn btn-sm btn-primary" v-on:click="detailHandler(stream)">Details</button></td>
+									<td><button v-if="stream.manual" class="btn btn-sm btn-danger" v-on:click="deleteHandler(stream)">Delete</button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -97,6 +102,8 @@
 								Hide unsupported streams
 							</label>
 						</div>
+						<br /><h6>Discovery</h6><hr>
+						<button class="btn btn-sm btn-primary" v-on:click="page='addSDP';">Add Stream</button>
 					</div>
 				</div>
 
@@ -123,6 +130,16 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div id="addSDP" v-if="page == 'addSDP'">
+				<div class="header">
+					<h4 class="d-inline-block">Add Stream manually</h4>
+					
+					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Cancel</button>
+					<button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-on:click="addSDPHandler()">Save</button>
+				</div>
+				<hr />
+				<textarea class="form-control" rows="10" v-model="rawSDP"></textarea>
 			</div>
 		</div>
 

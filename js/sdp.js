@@ -43,7 +43,7 @@ const isSupportedStream = function(sdp){
 		return false;
 	}
 
-	if(sdp.media[0].direction != 'recvonly' || sdp.media[0].type != 'audio' || sdp.media[0].protocol != 'RTP/AVP'){
+	if(sdp.media[0].type != 'audio' || sdp.media[0].protocol != 'RTP/AVP'){
 		return false;
 	}
 

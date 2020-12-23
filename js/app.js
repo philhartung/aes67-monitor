@@ -5,6 +5,7 @@ const os = require('os');
 const { RtAudio, RtAudioApi } = require('audify');
 
 //sorting stuff
+let preSort = function(a, b){if (a.id < b.id){return -1;};if (a.id == b.id){return 0;};return 1};
 let sortingFunction = function(a, b){if (a['name'] < b['name']){return -1;};if (a['name'] == b['name']){return 0;};return 1};
 
 let app = new Vue({
@@ -20,9 +21,10 @@ let app = new Vue({
 		network: [],
 		audiodevices: [],
 		current: {},
-		filterString: "",
+		filterString: '',
 		filtered: 0,
-		sortingState: 0
+		sortingState: 0,
+		rawSDP: ''
 	},
 	methods: {
 		getChannels: function(stream){			
@@ -153,7 +155,17 @@ let app = new Vue({
 				app.sortingState = 6;
 			}
 
-			app.sdp.sort(sortingFunction);
+			app.sdp.sort(preSort).sort(sortingFunction);
+		},
+		addSDPHandler: function(){
+			sdp.addStream(app.rawSDP);
+			app.page = 'sdp';
+			app.rawSDP = '';
+			syncSDPStreams();
+		},
+		deleteHandler: function(stream){
+			sdp.deleteStream(stream.id);
+			syncSDPStreams();
 		}
 	}
 });
@@ -219,8 +231,8 @@ if(app.audiodevices.length == 0){
 app.currentSettings = app.settings;
 
 //set interval to pull sdp client for updates
-setInterval(function(){
-	app.sdp = sdp.getSessions().sort(sortingFunction);
+const syncSDPStreams = function(){
+	app.sdp = sdp.getSessions().sort(preSort).sort(sortingFunction);
 
 	for(var i = 0; i < app.sdp.length; i++){
 		var stream = app.sdp[i];
@@ -231,7 +243,12 @@ setInterval(function(){
 			app.selected[id] = channels[0].val;
 		}
 	}
-}, 1000);
+}
+
+
+setInterval(function(){
+	syncSDPStreams();
+}, 4000);
 
 //own update stuff, because vuejs is weird and wont render it properly
 setInterval(function(){
