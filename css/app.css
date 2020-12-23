@@ -27,6 +27,22 @@ div.header{
 	line-height: 28px;
 }
 
+#table-sdp td:nth-child(7){
+	width: 135px !important;
+}
+
+#table-sdp td:nth-child(8){
+	width: 67px !important;
+}
+
+#table-sdp td:nth-child(9){
+	width: 72px !important;
+}
+
+#table-sdp td:nth-child(10){
+	width: 70px !important;
+}
+
 [v-cloak] {
   display:none;
 }
@@ -96,3 +112,4 @@ th.sortable.desc:after {
     border-top: 5px solid #333;
     border-bottom: 5px solid transparent;
 }
+
