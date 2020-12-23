@@ -131,6 +131,7 @@ exports.init = function(address){
 
 	socket.on('listening', function() {
 		socket.addMembership('239.255.255.255', address);
+		socket.setMulticastInterface(address)
 	});
 
 	socket.bind(9875);
@@ -150,6 +151,7 @@ exports.setNetworkInterface = function(address){
 		}
 
 		socket.addMembership('239.255.255.255', address);
+		socket.setMulticastInterface(address);
 	}
 }
 
