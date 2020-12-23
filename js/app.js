@@ -24,7 +24,8 @@ let app = new Vue({
 		filterString: '',
 		filtered: 0,
 		sortingState: 0,
-		rawSDP: ''
+		rawSDP: '',
+		announceRawSDP: false
 	},
 	methods: {
 		getChannels: function(stream){			
@@ -164,9 +165,10 @@ let app = new Vue({
 			app.sdp.sort(preSort).sort(sortingFunction);
 		},
 		addSDPHandler: function(){
-			sdp.addStream(app.rawSDP);
+			sdp.addStream(app.rawSDP, app.announceRawSDP);
 			app.page = 'sdp';
 			app.rawSDP = '';
+			app.announceRawSDP = false;
 			syncSDPStreams();
 		},
 		deleteHandler: function(stream){

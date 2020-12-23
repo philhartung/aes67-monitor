@@ -104,6 +104,24 @@ socket.on('message', function(message, rinfo) {
 	sessions[sdp.id] = preParse(sdp);
 });
 
+const announceStream = function(rawSDP, addr){
+	let sapHeader = Buffer.alloc(8);
+	let sapContentType = Buffer.from('application/sdp\0');
+	let ip = addr.split('.');
+
+	sapHeader.writeUInt8(0x20);
+	sapHeader.writeUInt16LE(0xefef, 2);
+	sapHeader.writeUInt8(parseInt(ip[0]), 4);
+	sapHeader.writeUInt8(parseInt(ip[1]), 5);
+	sapHeader.writeUInt8(parseInt(ip[2]), 6);
+	sapHeader.writeUInt8(parseInt(ip[3]), 7);
+
+	let sdpBody = Buffer.from(rawSDP);
+	let sdpMsg = Buffer.concat([sapHeader, sapContentType, sdpBody]);
+
+	socket.send(sdpMsg, 9875, '239.255.255.255', function(err){});
+}
+
 exports.init = function(address){
 	this.address = address;
 
@@ -118,7 +136,15 @@ exports.setNetworkInterface = function(address){
 	if(this.address != address){
 		socket.dropMembership('239.255.255.255', this.address);
 		this.address = address;
-		sessions = {};
+		
+		//delete all streams except manually added ones
+		let keys = Object.keys(sessions);
+		for(let i = 0; i < keys.length; i++){		
+			if(!sessions[keys[i]].manual){
+				delete sessions[keys[i]];
+			}
+		}
+
 		socket.addMembership('239.255.255.255', address);
 	}
 }
@@ -135,7 +161,7 @@ exports.getSessions = function(){
 	return Object.keys(sessions).map(function(key){return sessions[key];});
 }
 
-exports.addStream = function(rawSDP){
+exports.addStream = function(rawSDP, announce){
 	let sdp = sdpTransform.parse(rawSDP);
 
 	if(!sdp.origin || !sdp.name){
@@ -145,6 +171,7 @@ exports.addStream = function(rawSDP){
 	sdp.raw = rawSDP;
 	sdp.id = crypto.createHash('md5').update(JSON.stringify(sdp.origin)).digest('hex');
 	sdp.manual = true;
+	sdp.announce = announce;
 
 	sessions[sdp.id] = preParse(sdp);
 }
@@ -156,3 +183,14 @@ exports.deleteStream = function(id){
 exports.setDeleteTimeout = function(timeout){
 	deleteTimeout = timeout;
 }
+
+setInterval(function(){
+	let keys = Object.keys(sessions);
+
+	for(let i = 0; i < keys.length; i++){		
+		if(sessions[keys[i]].announce){
+			var rawSDP = sessions[keys[i]].raw;
+			announceStream(rawSDP, sessions[keys[i]].origin.address);
+		}
+	}
+}, 30 * 1000);
