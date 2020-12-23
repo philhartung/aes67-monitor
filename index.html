@@ -118,7 +118,7 @@
 			</div>
 			<div id="detail" v-if="page == 'detail'">
 				<div class="header">
-					<h4 class="d-inline-block">{{ current.name }} <small>{{ current['sess-info'] }}</small></h4>
+					<h4 class="d-inline-block">{{ current.name }} <small>{{ current.description == '-' ? '' : current.description }}</small></h4>
 
 					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
 					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'" :disabled="!current.isSupported">Listen</button>
@@ -129,15 +129,26 @@
 				<hr />
 				<div class="row">
 					<div class="col-7">
-						<h6>Details</h6>
-						<div><b>Device address:</b> {{current.origin.address}}</div>
-						<div><b>Multicast address:</b> {{current.mcast}}:{{current.media[0].port}}</div>
-						<div><b>Samplerate:</b> {{current.samplerate}}Hz</div>
-						<div><b>Packettime:</b> {{current.media[0].ptime}}ms</div>
-						<div><b>Audio channels:</b> {{current.channels}}</div>
-						<div><b>Codec:</b> {{current.codec}}</div>
-						<!--div><b>Predicted bitrate:</b> {{  }}</div-->
-						<div v-if="current.media[0].tsRefClocks && current.media[0].tsRefClocks[0].clksrcExt && current.media[0].tsRefClocks[0].clksrc == 'ptp'"><b>PTP clocksource:</b> {{current.media[0].tsRefClocks[0].clksrcExt}}</div>
+						<div class="wrapper" v-if="current.isSupported">
+							<h6>Details</h6>
+							<div><b>Device address:</b> {{current.origin.address}}</div>
+							<div><b>Multicast address:</b> {{current.mcast}}:{{current.media[0].port}}</div>
+							<div><b>Samplerate:</b> {{current.samplerate}}Hz</div>
+							<div><b>Packettime:</b> {{current.media[0].ptime}}ms</div>
+							<div><b>Audio channels:</b> {{current.channels}}</div>
+							<div><b>Codec:</b> {{current.codec}}</div>
+							<div v-if="current.dante || current.manual">
+								<b>Tags:</b> 
+								<span v-if="current.dante" class="badge badge-secondary">Dante</span>
+								<span v-if="current.manual" class="badge badge-secondary">Manual</span>
+							</div>
+							<!--div><b>Predicted bitrate:</b> {{  }}</div-->
+							<div v-if="current.media[0].tsRefClocks && current.media[0].tsRefClocks[0].clksrcExt && current.media[0].tsRefClocks[0].clksrc == 'ptp'"><b>PTP clocksource:</b> {{current.media[0].tsRefClocks[0].clksrcExt}}</div>
+						</div>
+						<div class="wrapper" v-if="!current.isSupported">
+							<h6>Stream not supported.</h6>
+							Reason: {{ current.unsupportedReason }}.
+						</div>
 					</div>
 					<div class="col-5">
 						<div class="form-group">

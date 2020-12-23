@@ -10,7 +10,7 @@ let deleteTimeout = 5 * 60 * 1000;
 
 const preParse = function(sdp){
 	//check if valid for playback
-	sdp.isSupported = isSupportedStream(sdp);
+	sdp = isSupportedStream(sdp);
 	sdp.dante = (sdp.keywords == 'Dante');
 
 	//get multicast from connection
@@ -37,7 +37,7 @@ const preParse = function(sdp){
 		sdp.channels = sdp.media[0].rtp[0].encoding;
 		sdp.rtpMap = sdp.codec+'/'+sdp.samplerate+'/'+sdp.channels;
 	}else{
-		sdp.rtpMap = 'unsupported format';
+		sdp.rtpMap = '-';
 	}
 
 	return sdp;
@@ -45,30 +45,43 @@ const preParse = function(sdp){
 
 const isSupportedStream = function(sdp){
 	if(sdp.media.length != 1){
-		return false;
+		sdp.isSupported = false;
+		sdp.unsupportedReason = 'Unsupported media type';
+		return sdp;
 	}
 
 	if(sdp.media[0].type != 'audio' || sdp.media[0].protocol != 'RTP/AVP'){
-		return false;
+		sdp.isSupported = false;
+		sdp.unsupportedReason = 'Unsupported media type';
+		return sdp;
 	}
 
 	if(sdp.media[0].rtp.length != 1){
-		return false;
+		sdp.isSupported = false;
+		sdp.unsupportedReason = 'Unsupported rtpmap';
+		return sdp;
 	}
 
 	if(supportedSampleRates.indexOf(sdp.media[0].rtp[0].rate) === -1){
-		return false;
+		sdp.isSupported = false;
+		sdp.unsupportedReason = 'Unsupported samplerate';
+		return sdp;
 	}
 
 	if(sdp.media[0].rtp[0].codec != 'L24' && sdp.media[0].rtp[0].codec != 'L16'){
-		return false;
+		sdp.isSupported = false;
+		sdp.unsupportedReason = 'Unsupported codec';
+		return sdp;
 	}
 
 	if(sdp.media[0].rtp[0].encoding < 1 || sdp.media[0].rtp[0].encoding > 8){
-		return false;
+		sdp.isSupported = false;
+		sdp.unsupportedReason = 'Unsupported channel number';
+		return sdp;
 	}
 
-	return true;
+	sdp.isSupported = true;
+	return sdp;
 }
 
 socket.on('message', function(message, rinfo) {
