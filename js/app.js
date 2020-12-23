@@ -16,7 +16,7 @@ let app = new Vue({
 		selected: {},
 		audio: 0,
 		page: 'sdp',
-		settings: {hideStreams: true, jitterBuffer: true, jitterBufferTime: 16},
+		settings: {hideStreams: true, jitterBuffer: true, jitterBufferTime: 16, deleteTimeout: 300},
 		currentSettings: {},
 		network: [],
 		audiodevices: [],
@@ -79,9 +79,17 @@ let app = new Vue({
 					case 'M7': channel1 = 6; channel2 = 6; break;
 					case 'M8': channel1 = 7; channel2 = 7; break;
 				}
-				
+
+				for(var i = 0; i < app.audiodevices.length; i++){
+					if(app.audiodevices[i].id == app.settings.device && app.audiodevices[i].samplerates.indexOf(stream.samplerate) === -1){
+						alert('Samplerate not supported by audiodevice!');
+						return;
+					}
+				}
+
 				ipcRenderer.send('asynMessage', 'stop');
 				app.audio = stream.id;
+
 				ipcRenderer.send('asynMessage', JSON.stringify({
 					mcast: stream.mcast,
 					port: stream.media[0].port,
@@ -112,14 +120,12 @@ let app = new Vue({
 		saveSettings: function(bool){
 			if(bool){
 				app.settings = JSON.parse(JSON.stringify(app.currentSettings));
+				sdp.setNetworkInterface(app.settings.addr);
+				sdp.setDeleteTimeout(app.settings.deleteTimeout * 1000);
 			}else{
 				app.currentSettings = JSON.parse(JSON.stringify(app.settings));
 			}
-
-			//restart audio if settings changed
 			
-			//set ip for sdp
-			sdp.setNetworkInterface(app.settings.addr);
 			app.page = 'sdp';
 		},
 		sortStreams: function(attribute){
@@ -216,7 +222,7 @@ var devices = rtAudio.getDevices();
 
 for(var i = 0; i < devices.length; i++){
 	if(devices[i].outputChannels >= 2){
-		app.audiodevices.push({id: i, name: devices[i].name});
+		app.audiodevices.push({id: i, name: devices[i].name, samplerates: devices[i].sampleRates});
 	}
 }
 
@@ -234,6 +240,7 @@ app.currentSettings = app.settings;
 const syncSDPStreams = function(){
 	app.sdp = sdp.getSessions().sort(preSort).sort(sortingFunction);
 
+
 	for(var i = 0; i < app.sdp.length; i++){
 		var stream = app.sdp[i];
 		var id = stream.id;
@@ -245,10 +252,9 @@ const syncSDPStreams = function(){
 	}
 }
 
-
 setInterval(function(){
 	syncSDPStreams();
-}, 4000);
+}, 1000);
 
 //own update stuff, because vuejs is weird and wont render it properly
 setInterval(function(){

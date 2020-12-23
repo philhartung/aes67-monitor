@@ -87,7 +87,7 @@
 							</label>
 						</div>
 						<div class="input-group">
-							<input class="form-control" type="number" v-model="currentSettings.jitterBufferTime" :disabled="!currentSettings.jitterBuffer" min="1" max="1000"/>
+							<input class="form-control" type="number" v-model="currentSettings.jitterBufferTime" :disabled="!currentSettings.jitterBuffer" min="1" max="1000" />
 							<div class="input-group-append">
 								<span class="input-group-text">packets</span>
 							</div>
@@ -103,10 +103,18 @@
 							</label>
 						</div>
 						<br /><h6>Discovery</h6><hr>
-						<button class="btn btn-sm btn-primary" v-on:click="page='addSDP';">Add Stream</button>
+						<label for="basic-url">SDP delete timeout</label>
+						<div class="input-group">
+							<input class="form-control" type="number" id="basic-url" v-model="currentSettings.deleteTimeout" />
+							<div class="input-group-append">
+								<span class="input-group-text">seconds</span>
+							</div>
+						</div>
+						<small id="emailHelp" class="form-text text-muted">Streams will be removed, if no new announcement is received within timeout.</small>
+						<br />
+						<button class="btn btn-sm btn-primary" v-on:click="page='addSDP';">Add Stream via SDP</button>
 					</div>
 				</div>
-
 			</div>
 			<div id="detail" v-if="page == 'detail'">
 				<div class="header">
@@ -139,6 +147,7 @@
 					<button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-on:click="addSDPHandler()">Save</button>
 				</div>
 				<hr />
+				<span>Paste SDP data below</span>
 				<textarea class="form-control" rows="10" v-model="rawSDP"></textarea>
 			</div>
 		</div>

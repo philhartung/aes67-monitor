@@ -3,8 +3,10 @@ const sdpTransform = require('sdp-transform');
 const crypto = require('crypto');
 
 const socket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
+const supportedSampleRates = [16000, 32000, 44100, 48000, 88200, 96000, 192000];
 let address;
 let sessions = {};
+let deleteTimeout = 5 * 60 * 1000;
 
 const preParse = function(sdp){
 	//check if valid for playback
@@ -51,7 +53,7 @@ const isSupportedStream = function(sdp){
 		return false;
 	}
 
-	if(sdp.media[0].rtp[0].rate != 48000 && sdp.media[0].rtp[0].rate != 44100 && sdp.media[0].rtp[0].rate != 96000){
+	if(supportedSampleRates.indexOf(sdp.media[0].rtp[0].rate) === -1){
 		return false;
 	}
 
@@ -73,6 +75,10 @@ socket.on('message', function(message, rinfo) {
 
 	let rawSDP = message.toString('ascii', 24);
 	let sdp = sdpTransform.parse(rawSDP);
+
+	if(!sdp.origin || !sdp.name){
+		return;
+	}
 
 	sdp.raw = rawSDP;
 	sdp.id = crypto.createHash('md5').update(JSON.stringify(sdp.origin)).digest('hex');
@@ -96,6 +102,7 @@ exports.setNetworkInterface = function(address){
 	if(this.address != address){
 		socket.dropMembership('239.255.255.255', this.address);
 		this.address = address;
+		sessions = {};
 		socket.addMembership('239.255.255.255', address);
 	}
 }
@@ -104,12 +111,12 @@ exports.getSessions = function(){
 	let keys = Object.keys(sessions);
 
 	for(let i = 0; i < keys.length; i++){		
-		if((Date.now() - sessions[keys[i]].lastSeen) > 5 * 60 * 1000 && !sessions[keys[i]].manual){
+		if((Date.now() - sessions[keys[i]].lastSeen) > deleteTimeout && !sessions[keys[i]].manual){
 			delete sessions[keys[i]];
 		}
 	}
 
-	return keys.map(function(key){return sessions[key];});
+	return Object.keys(sessions).map(function(key){return sessions[key];});
 }
 
 exports.addStream = function(rawSDP){
@@ -128,4 +135,8 @@ exports.addStream = function(rawSDP){
 
 exports.deleteStream = function(id){
 	delete sessions[id];
+}
+
+exports.setDeleteTimeout = function(timeout){
+	deleteTimeout = timeout;
 }
