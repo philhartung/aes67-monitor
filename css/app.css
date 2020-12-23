@@ -52,3 +52,47 @@ select#listen {
 button#listen {
 	margin-right: 8px;
 }
+
+th.sortable{
+	cursor: pointer;
+	position: relative;
+}
+
+th.sortable:after,
+th.sortable:after,
+th.sortable:after {
+    content: ' ';
+    position: absolute;
+    height: 0;
+    width: 0;
+    right: 10px;
+    top: 16px;
+}
+
+th.sortable:after {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #ccc;
+    border-bottom: 0px solid transparent;
+}
+
+th.sortable:hover:after {
+    border-top: 5px solid #888;
+}
+
+th.sortable.asc:after {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 0px solid transparent;
+    border-bottom: 5px solid #333;
+}
+th.sortable.asc:hover:after {
+    border-bottom: 5px solid #888;
+}
+
+th.sortable.desc:after {    
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+    border-bottom: 5px solid transparent;
+}

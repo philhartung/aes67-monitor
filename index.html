@@ -21,11 +21,11 @@
 						<table id="table-sdp" class="table table-sm" v-if="sdp.length > 0">
 							<thead v-if="filtered > 0 || (sdp.length > 0 && filterString == '')">
 								<tr>
-									<th>Name</th>
+									<th v-on:click="sortStreams('name')" class="sortable" v-bind:class="{'asc': sortingState == 0, 'desc': sortingState == 1}">Name</th>
 									<th></th>
-									<th>Info</th>
-									<th>Device Address</th>
-									<th>Multicast Address</th>
+									<th v-on:click="sortStreams('info')" class="sortable" v-bind:class="{'asc': sortingState == 2, 'desc': sortingState == 3}">Info</th>
+									<th v-on:click="sortStreams('addr')" class="sortable" v-bind:class="{'asc': sortingState == 4, 'desc': sortingState == 5}">Device Address</th>
+									<th v-on:click="sortStreams('mcast')" class="sortable" v-bind:class="{'asc': sortingState == 6, 'desc': sortingState == 7}">Multicast Address</th>
 									<th>Media format</th>
 									<th>Channel</th>
 									<th></th>
@@ -33,7 +33,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="stream in sdp" dis-v-on:click="sdpHandler(stream)" dis-v-bind:class="{ 'table-primary': (selected == stream.id) }" v-if="filterStream(stream) && (stream.isSupported || !settings.hideStreams)">
+								<tr v-for="stream in sdp" v-if="filterStream(stream) && (stream.isSupported || !settings.hideStreams)">
 									<td>{{ stream.name }}</td>
 									<td><span v-if="stream.dante" class="badge badge-secondary">Dante</span></td>
 									<td>{{ stream.description }}</td>

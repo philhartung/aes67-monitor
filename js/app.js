@@ -4,6 +4,9 @@ const sdp = require('./js/sdp');
 const os = require('os');
 const { RtAudio, RtAudioApi } = require('audify');
 
+//sorting stuff
+let sortingFunction = function(a, b){if (a['name'] < b['name']){return -1;};if (a['name'] == b['name']){return 0;};return 1};
+
 let app = new Vue({
 	el: '#app',
 	data: {
@@ -18,7 +21,8 @@ let app = new Vue({
 		audiodevices: [],
 		current: {},
 		filterString: "",
-		filtered: 0
+		filtered: 0,
+		sortingState: 0
 	},
 	methods: {
 		getChannels: function(stream){			
@@ -115,6 +119,41 @@ let app = new Vue({
 			//set ip for sdp
 			sdp.setNetworkInterface(app.settings.addr);
 			app.page = 'sdp';
+		},
+		sortStreams: function(attribute){
+			if(attribute == 'name' && app.sortingState == 0){
+				sortingFunction = function(a, b){if (a['name'] < b['name']){return 1;};if (a['name'] == b['name']){return 0;};return -1};
+				app.sortingState = 1;
+			}else if(attribute == 'name'){
+				sortingFunction = function(a, b){if (a['name'] < b['name']){return -1;};if (a['name'] == b['name']){return 0;};return 1};
+				app.sortingState = 0;
+			}
+
+			if(attribute == 'info' && app.sortingState == 2){
+				sortingFunction = function(a, b){if (a['description'] < b['description']){return 1;};if (a['description'] == b['description']){return 0;};return -1};
+				app.sortingState = 3;
+			}else if(attribute == 'info'){
+				sortingFunction = function(a, b){if (a['description'] < b['description']){return -1;};if (a['description'] == b['description']){return 0;};return 1};
+				app.sortingState = 2;
+			}
+
+			if(attribute == 'addr' && app.sortingState == 4){
+				sortingFunction = function(a, b){if (a.origin.address < b.origin.address){return 1;};if (a.origin.address == b.origin.address){return 0;};return -1};
+				app.sortingState = 5;
+			}else if(attribute == 'addr'){
+				sortingFunction = function(a, b){if (a.origin.address < b.origin.address){return -1;};if (a.origin.address == b.origin.address){return 0;};return 1};
+				app.sortingState = 4;
+			}
+
+			if(attribute == 'mcast' && app.sortingState == 6){
+				sortingFunction = function(a, b){if (a['mcast'] < b['mcast']){return 1;};if (a['mcast'] == b['mcast']){return 0;};return -1};
+				app.sortingState = 7;
+			}else if(attribute == 'mcast'){
+				sortingFunction = function(a, b){if (a['mcast'] < b['mcast']){return -1;};if (a['mcast'] == b['mcast']){return 0;};return 1};
+				app.sortingState = 6;
+			}
+
+			app.sdp.sort(sortingFunction);
 		}
 	}
 });
@@ -181,7 +220,7 @@ app.currentSettings = app.settings;
 
 //set interval to pull sdp client for updates
 setInterval(function(){
-	app.sdp = sdp.getSessions();
+	app.sdp = sdp.getSessions().sort(sortingFunction);
 
 	for(var i = 0; i < app.sdp.length; i++){
 		var stream = app.sdp[i];
