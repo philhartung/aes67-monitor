@@ -174,6 +174,11 @@ let app = new Vue({
 		deleteHandler: function(stream){
 			sdp.deleteStream(stream.id);
 			syncSDPStreams();
+		},
+		calculateBitrate: function(stream){
+			let audioBitrate = stream.samplerate * stream.channels * (stream.codec == 'L24' ? 3 : 2);
+			let rtpHeader = Math.round(1000 / stream.media[0].ptime) * 12;
+			return Math.round((audioBitrate + rtpHeader) / 1000) / 1000;
 		}
 	}
 });
@@ -241,7 +246,6 @@ app.currentSettings = app.settings;
 //set interval to pull sdp client for updates
 const syncSDPStreams = function(){
 	app.sdp = sdp.getSessions().sort(preSort).sort(sortingFunction);
-
 
 	for(var i = 0; i < app.sdp.length; i++){
 		var stream = app.sdp[i];

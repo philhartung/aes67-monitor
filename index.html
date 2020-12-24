@@ -138,14 +138,15 @@
 							<div><b>Packettime:</b> {{current.media[0].ptime}}ms</div>
 							<div><b>Audio channels:</b> {{current.channels}}</div>
 							<div><b>Codec:</b> {{current.codec}}</div>
+
+							<div><b>Bitrate (with overhead):</b> {{ calculateBitrate(current) }}mb/s</div>
+							<div v-if="current.media[0].tsRefClocks && current.media[0].tsRefClocks[0].clksrcExt && current.media[0].tsRefClocks[0].clksrc == 'ptp'"><b>PTP clocksource:</b> {{current.media[0].tsRefClocks[0].clksrcExt}}</div>
 							<div v-if="current.dante || current.manual || current.announce">
 								<b>Tags:</b> 
 								<span v-if="current.dante" class="badge badge-secondary" title="Dante device">Dante</span>
 								<span v-if="current.manual" class="badge badge-secondary" title="Manually added">Manual</span>
 								<span v-if="current.announce" class="badge badge-secondary" title="Stream is being announced on the network">SAP</span>
 							</div>
-							<!--div><b>Predicted bitrate:</b> {{  }}</div-->
-							<div v-if="current.media[0].tsRefClocks && current.media[0].tsRefClocks[0].clksrcExt && current.media[0].tsRefClocks[0].clksrc == 'ptp'"><b>PTP clocksource:</b> {{current.media[0].tsRefClocks[0].clksrcExt}}</div>
 						</div>
 						<div class="wrapper" v-if="!current.isSupported">
 							<h6>Stream not supported.</h6>
