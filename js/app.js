@@ -25,7 +25,8 @@ let app = new Vue({
 		filtered: 0,
 		sortingState: 0,
 		rawSDP: '',
-		announceRawSDP: false
+		announceRawSDP: false,
+		rawSDPDetails: ''
 	},
 	methods: {
 		getChannels: function(stream){			
@@ -49,6 +50,7 @@ let app = new Vue({
 		},
 		detailHandler: function(stream){
 			app.current = stream;
+			app.rawSDPDetails = stream.raw;
 			app.page = 'detail';
 		},
 		audioHandler: function(stream){
@@ -206,11 +208,17 @@ let app = new Vue({
 		},
 		getPTPClocksrc: function(stream){
 			var ptp = stream.media[0].tsRefClocks[0].clksrcExt.split(':');
-			return ptp[1];
+			return ptp[1].replace(/-/g, ":");
 		},
 		getPTPDomain: function(stream){
 			var ptp = stream.media[0].tsRefClocks[0].clksrcExt.split(':');
 			return ptp[2];
+		},
+		saveHandler: function(stream){
+			sdp.deleteStream(stream.id);
+			sdp.addStream(app.rawSDPDetails, stream.announce);
+			syncSDPStreams();
+			app.page='sdp';
 		}
 	}
 });

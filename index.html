@@ -126,6 +126,7 @@
 					<h4 class="d-inline-block">{{ current.name }} <small>{{ current.description == '-' ? '' : current.description }}</small></h4>
 
 					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='sdp';">Back</button>
+					<button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-if="rawSDPDetails != current.raw" v-on:click="saveHandler(current)">Save</button>
 					<button class="btn btn-sm btn-success float-right" id="listen" v-on:click="audioHandler(current)" v-bind:class="{ 'btn-success': (audio != current.id), 'btn-danger': (audio == current.id) }" v-html="current.id == audio ? 'Stop' : 'Listen'" :disabled="!current.isSupported">Listen</button>
 					<select class="form-control form-control-sm d-inline-block float-right" id="listen" :disabled="audio == current.id || !current.isSupported" v-model="selected[current.id]">
 						<option v-for="channel in getChannels(current)" v-bind:value="channel.val">{{ channel.name }}</option>
@@ -160,7 +161,7 @@
 					<div class="col-5">
 						<div class="form-group">
 							<h6 for="sdpraw">Raw SDP</h6>
-							<textarea class="form-control" id="sdpraw" rows="23" :readonly="!current.manual">{{ current.raw }}</textarea>
+							<textarea class="form-control" id="sdpraw" rows="23" :readonly="!current.manual" v-model="rawSDPDetails"></textarea>
 						</div>
 					</div>
 				</div>
