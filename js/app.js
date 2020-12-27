@@ -162,6 +162,30 @@ let app = new Vue({
 				app.sortingState = 6;
 			}
 
+			if(attribute == 'codec' && app.sortingState == 8){
+				sortingFunction = function(a, b){if (a['codec'] < b['codec']){return 1;};if (a['codec'] == b['codec']){return 0;};return -1};
+				app.sortingState = 9;
+			}else if(attribute == 'codec'){
+				sortingFunction = function(a, b){if (a['codec'] < b['codec']){return -1;};if (a['codec'] == b['codec']){return 0;};return 1};
+				app.sortingState = 8;
+			}
+
+			if(attribute == 'samplerate' && app.sortingState == 10){
+				sortingFunction = function(a, b){if (a['samplerate'] < b['samplerate']){return 1;};if (a['samplerate'] == b['samplerate']){return 0;};return -1};
+				app.sortingState = 11;
+			}else if(attribute == 'samplerate'){
+				sortingFunction = function(a, b){if (a['samplerate'] < b['samplerate']){return -1;};if (a['samplerate'] == b['samplerate']){return 0;};return 1};
+				app.sortingState = 10;
+			}
+
+			if(attribute == 'channels' && app.sortingState == 12){
+				sortingFunction = function(a, b){if (a['channels'] < b['channels']){return 1;};if (a['channels'] == b['channels']){return 0;};return -1};
+				app.sortingState = 13;
+			}else if(attribute == 'channels'){
+				sortingFunction = function(a, b){if (a['channels'] < b['channels']){return -1;};if (a['channels'] == b['channels']){return 0;};return 1};
+				app.sortingState = 12;
+			}
+
 			app.sdp.sort(preSort).sort(sortingFunction);
 		},
 		addSDPHandler: function(){
@@ -179,6 +203,14 @@ let app = new Vue({
 			let audioBitrate = stream.samplerate * stream.channels * (stream.codec == 'L24' ? 3 : 2);
 			let rtpHeader = Math.round(1000 / stream.media[0].ptime) * 12;
 			return Math.round((audioBitrate + rtpHeader) / 1000) / 1000;
+		},
+		getPTPClocksrc: function(stream){
+			var ptp = stream.media[0].tsRefClocks[0].clksrcExt.split(':');
+			return ptp[1];
+		},
+		getPTPDomain: function(stream){
+			var ptp = stream.media[0].tsRefClocks[0].clksrcExt.split(':');
+			return ptp[2];
 		}
 	}
 });

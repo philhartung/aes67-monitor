@@ -22,11 +22,13 @@
 							<thead v-if="filtered > 0 || (sdp.length > 0 && filterString == '')">
 								<tr>
 									<th v-on:click="sortStreams('name')" class="sortable" v-bind:class="{'asc': sortingState == 0, 'desc': sortingState == 1}">Name</th>
-									<th></th>
+									<th>Tags</th>
 									<th v-on:click="sortStreams('info')" class="sortable" v-bind:class="{'asc': sortingState == 2, 'desc': sortingState == 3}">Info</th>
 									<th v-on:click="sortStreams('addr')" class="sortable" v-bind:class="{'asc': sortingState == 4, 'desc': sortingState == 5}">Device Address</th>
 									<th v-on:click="sortStreams('mcast')" class="sortable" v-bind:class="{'asc': sortingState == 6, 'desc': sortingState == 7}">Multicast Address</th>
-									<th>Media format</th>
+									<th v-on:click="sortStreams('codec')" class="sortable" v-bind:class="{'asc': sortingState == 8, 'desc': sortingState == 9}">Format</th>
+									<th v-on:click="sortStreams('samplerate')" class="sortable" v-bind:class="{'asc': sortingState == 10, 'desc': sortingState == 11}">Samplerate</th>
+									<th v-on:click="sortStreams('channels')" class="sortable" v-bind:class="{'asc': sortingState == 12, 'desc': sortingState == 13}">Channel #</th>
 									<th>Channel</th>
 									<th></th>
 									<th></th>
@@ -44,7 +46,9 @@
 									<td>{{ stream.description }}</td>
 									<td>{{ stream.origin.address }}</td>
 									<td>{{ stream.mcast }}</td>
-									<td>{{ stream.rtpMap }}</td>
+									<td>{{ stream.codec }}</td>
+									<td>{{ stream.samplerate }}Hz</td>
+									<td>{{ stream.channels }}</td>
 									<td>
 										<select class="form-control form-control-sm" :disabled="!stream.isSupported || audio == stream.id" v-model="selected[stream.id]">
 											<option v-for="channel in getChannels(stream)" v-bind:value="channel.val">{{ channel.name }}</option>
@@ -137,10 +141,10 @@
 							<div><b>Samplerate:</b> {{current.samplerate}}Hz</div>
 							<div><b>Packettime:</b> {{current.media[0].ptime}}ms</div>
 							<div><b>Audio channels:</b> {{current.channels}}</div>
-							<div><b>Codec:</b> {{current.codec}}</div>
-
-							<div><b>Bitrate (with overhead):</b> {{ calculateBitrate(current) }}mb/s</div>
-							<div v-if="current.media[0].tsRefClocks && current.media[0].tsRefClocks[0].clksrcExt && current.media[0].tsRefClocks[0].clksrc == 'ptp'"><b>PTP clocksource:</b> {{current.media[0].tsRefClocks[0].clksrcExt}}</div>
+							<div><b>Format:</b> {{current.codec}}</div>
+							<div><b>Bitrate:</b> {{ calculateBitrate(current) }}mb/s</div>
+							<div v-if="current.media[0].tsRefClocks && current.media[0].tsRefClocks[0].clksrcExt && current.media[0].tsRefClocks[0].clksrc == 'ptp'"><b>PTP clocksource:</b> {{ getPTPClocksrc(current) }}</div>
+							<div v-if="current.media[0].tsRefClocks && current.media[0].tsRefClocks[0].clksrcExt && current.media[0].tsRefClocks[0].clksrc == 'ptp'"><b>PTP domain:</b> {{ getPTPDomain(current) }}</div>
 							<div v-if="current.dante || current.manual || current.announce">
 								<b>Tags:</b> 
 								<span v-if="current.dante" class="badge badge-secondary" title="Dante device">Dante</span>

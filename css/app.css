@@ -27,19 +27,19 @@ div.header{
 	line-height: 28px;
 }
 
-#table-sdp td:nth-child(7){
+#table-sdp td:nth-child(9){
 	width: 135px !important;
 }
 
-#table-sdp td:nth-child(8){
+#table-sdp td:nth-child(10){
 	width: 67px !important;
 }
 
-#table-sdp td:nth-child(9){
+#table-sdp td:nth-child(11){
 	width: 72px !important;
 }
 
-#table-sdp td:nth-child(10){
+#table-sdp td:nth-child(12){
 	width: 70px !important;
 }
 
