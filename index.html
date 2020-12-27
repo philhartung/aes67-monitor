@@ -47,7 +47,7 @@
 									<td>{{ stream.origin.address }}</td>
 									<td>{{ stream.mcast }}</td>
 									<td>{{ stream.codec }}</td>
-									<td>{{ stream.samplerate }}Hz</td>
+									<td><span v-if="stream.isSupported">{{ stream.samplerate }}Hz</span></td>
 									<td>{{ stream.channels }}</td>
 									<td>
 										<select class="form-control form-control-sm" :disabled="!stream.isSupported || audio == stream.id" v-model="selected[stream.id]">
