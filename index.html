@@ -170,12 +170,12 @@
 				<div class="header">
 					<h4 class="d-inline-block">Add Stream manually</h4>
 					
-					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings';">Cancel</button>
+					<button class="d-inline-block btn btn-sm btn-secondary float-right" v-on:click="page='settings'; rawSDP='';">Cancel</button>
 					<button class="d-inline-block btn btn-sm btn-success float-right" id="save" v-on:click="addSDPHandler()">Add</button>
 				</div>
 				<hr />
 				<span>Paste SDP data below</span>
-				<textarea class="form-control" rows="10" v-model="rawSDP"></textarea>
+				<textarea class="form-control" rows="20" v-model="rawSDP" placeholder="SDP data"></textarea>
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" v-model="announceRawSDP" id="sapAnnounce">
 					<label class="form-check-label" for="sapAnnounce">
