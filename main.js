@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const audio = require('./js/audio');
 
-function createWindow () {
+const createWindow = function(){
 	const win = new BrowserWindow({
 		width: 1920,
 		height: 1080,
@@ -14,21 +14,21 @@ function createWindow () {
 	win.loadFile('index.html')
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', function(){
 	if (process.platform !== 'darwin') {
 		app.quit()
 	}else{
 		audio.stop();
 	}
-})
+});
 
-app.on('activate', () => {
+app.on('activate', function(){
 	if (BrowserWindow.getAllWindows().length === 0) {
 		createWindow()
 	}
-})
+});
 
 //audio stuff
 ipcMain.on('asynMessage', function(event, args){
