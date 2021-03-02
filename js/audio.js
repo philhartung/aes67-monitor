@@ -41,14 +41,12 @@ exports.start = function(args){
 
 		if(seqInternal != -1){
 			let bufferIndex = seqInternal * samplesPerPacket * 4;
-			let outBuf = pcmL16out.slice(bufferIndex, bufferIndex + samplesPerPacket * 4)
+			let outBuf = pcmL16out.slice(bufferIndex, bufferIndex + samplesPerPacket * 4);
 			rtAudio.write(outBuf);
-			seqInternal = (seqInternal + 1) % bufferSize
+			seqInternal = (seqInternal + 1) % bufferSize;
 		}else{
 			seqInternal = (seqNum - jitterBufferSize) % bufferSize;
-			for(var j = 0; j < jitterBufferSize; j++){
-				rtAudio.write(Buffer.alloc(samplesPerPacket * 4));
-			}
+			rtAudio.write(Buffer.alloc(jitterBufferSize * samplesPerPacket * 4));
 		}
 	});
 
