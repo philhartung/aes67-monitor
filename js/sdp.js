@@ -44,7 +44,7 @@ const preParse = function(sdp){
 }
 
 const isSupportedStream = function(sdp){
-	if(sdp.media.length != 1){
+	if(sdp.media.length <= 0){
 		sdp.isSupported = false;
 		sdp.unsupportedReason = 'Unsupported media type';
 		return sdp;
@@ -74,7 +74,7 @@ const isSupportedStream = function(sdp){
 		return sdp;
 	}
 
-	if(sdp.media[0].rtp[0].encoding < 1 || sdp.media[0].rtp[0].encoding > 8){
+	if(sdp.media[0].rtp[0].encoding < 1 || sdp.media[0].rtp[0].encoding > 64){
 		sdp.isSupported = false;
 		sdp.unsupportedReason = 'Unsupported channel number';
 		return sdp;
@@ -114,7 +114,7 @@ const announceStream = function(rawSDP, addr){
 	let ip = addr.split('.');
 
 	sapHeader.writeUInt8(0x20);
-	sapHeader.writeUInt16LE(0xefef, 2);
+	sapHeader.writeUInt16LE(0xefef, 2);//needs to be random per Stream change because of Dante Controller
 	sapHeader.writeUInt8(parseInt(ip[0]), 4);
 	sapHeader.writeUInt8(parseInt(ip[1]), 5);
 	sapHeader.writeUInt8(parseInt(ip[2]), 6);

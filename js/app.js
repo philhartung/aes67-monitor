@@ -67,21 +67,17 @@ let app = new Vue({
 
 				var channel1 = 0;
 				var channel2 = 0;
+				var channelMappingNumber = parseInt(channelMapping.substring(1));
 
-				switch(channelMapping){
-					case 'S1': channel1 = 0; channel2 = 1; break;
-					case 'S3': channel1 = 2; channel2 = 3; break;
-					case 'S5': channel1 = 4; channel2 = 5; break;
-					case 'S7': channel1 = 6; channel2 = 7; break;
-					case 'M1': channel1 = 0; channel2 = 0; break;
-					case 'M2': channel1 = 1; channel2 = 1; break;
-					case 'M3': channel1 = 2; channel2 = 2; break;
-					case 'M4': channel1 = 3; channel2 = 3; break;
-					case 'M5': channel1 = 4; channel2 = 4; break;
-					case 'M6': channel1 = 5; channel2 = 5; break;
-					case 'M7': channel1 = 6; channel2 = 6; break;
-					case 'M8': channel1 = 7; channel2 = 7; break;
+				if(channelMapping.substring(0,1) == 'S' && channelMappingNumber != NaN){
+					channel1 = channelMappingNumber - 1;
+					channel2 = channelMappingNumber;
+				}else if(channelMapping.substring(0,1) == 'M' && channelMappingNumber != NaN){
+					channel1 = channelMappingNumber - 1;
+					channel2 = channelMappingNumber - 1;
 				}
+
+				console.log(channel1, channel2);
 
 				for(var i = 0; i < app.audiodevices.length; i++){
 					if(app.audiodevices[i].id == app.settings.device && app.audiodevices[i].samplerates.indexOf(stream.samplerate) === -1){

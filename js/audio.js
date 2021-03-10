@@ -46,7 +46,10 @@ exports.start = function(args){
 			seqInternal = (seqInternal + 1) % bufferSize;
 		}else{
 			seqInternal = (seqNum - jitterBufferSize) % bufferSize;
-			rtAudio.write(Buffer.alloc(jitterBufferSize * samplesPerPacket * 4));
+			
+			for(var j = 0; j < jitterBufferSize; j++){
+				rtAudio.write(Buffer.alloc(samplesPerPacket * 4));
+			}
 		}
 	});
 
