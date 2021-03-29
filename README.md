@@ -1,4 +1,4 @@
-# AES67 Monitor App
+# AES67 Stream Monitor
 Cross plattform AES67 monitoring app. The app was primarily tested in a hybrid Dante/AES67 environment. Features include:
  * Auto discovery of streams via Session Announcement Protocol and manually adding streams by pasting SDP data
  * Filter and sort streams
