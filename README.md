@@ -3,7 +3,7 @@ Cross plattform AES67 monitoring app. The app was primarily tested in a hybrid D
  * Auto discovery of streams via Session Announcement Protocol and manually adding streams by pasting SDP data
  * Filter and sort streams
  * listen to streams by selecting which channels you want to listen to (Stereo and Mono supported)
- * wide format support: 44100Hz, 48000Hz and 96000Hz (and more) if the soundcard supports it, L16 and L24 PCM with up to 8 channels and all packet times according to AES67 spec are supported
+ * wide format support: 44100Hz, 48000Hz and 96000Hz (and more) if the soundcard supports it, L16 and L24 PCM with up to 64 channels and all packet times according to AES67 spec are supported
  * Settings for Network interface, audio device, buffering for RTP and more
 
 Here are some screenshots of how the app looks:
