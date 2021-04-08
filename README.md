@@ -33,6 +33,7 @@ This app is still in early development. Some things that need to be reworked bef
  * ~~rewrite RTP audio backend to support more audio formats (it is currently limited to 48000Hz L24 at 48 samples/packet and quite buggy, also add the option for buffering)~~ done
  * ~~rewrite SDP module and SAP backend~~ done
  * ~~proper support for settings~~ done
+ * make settings persistent between restarts
  * needs a lot more testing
  
  Also I would like to add more features such as:
