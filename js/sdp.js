@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const socket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 const supportedSampleRates = [16000, 32000, 44100, 48000, 88200, 96000, 192000];
 let address;
+let cb = function(error){console.error(error);};
 let sessions = {};
 let deleteTimeout = 5 * 60 * 1000;
 
@@ -108,6 +109,13 @@ socket.on('message', function(message, rinfo) {
 	sessions[sdp.id] = preParse(sdp);
 });
 
+socket.on('error', function(error){
+	console.error('[SDP ERROR]', error);
+	if(error.message == 'bind EACCES 0.0.0.0:9875'){
+		cb('Could not bind to socket!');
+	}
+});
+
 const announceStream = function(rawSDP, addr){
 	let sapHeader = Buffer.alloc(8);
 	let sapContentType = Buffer.from('application/sdp\0');
@@ -126,12 +134,13 @@ const announceStream = function(rawSDP, addr){
 	socket.send(sdpMsg, 9875, '239.255.255.255', function(err){});
 }
 
-exports.init = function(address){
+exports.init = function(address, callback){
 	this.address = address;
+	cb = callback;
 
 	socket.on('listening', function() {
+		socket.setMulticastInterface(address);
 		socket.addMembership('239.255.255.255', address);
-		socket.setMulticastInterface(address)
 	});
 
 	socket.bind(9875);
@@ -139,7 +148,12 @@ exports.init = function(address){
 
 exports.setNetworkInterface = function(address){
 	if(this.address != address){
-		socket.dropMembership('239.255.255.255', this.address);
+		try{
+			socket.dropMembership('239.255.255.255', this.address);
+		}catch(e){
+			console.error(e);
+		}
+		
 		this.address = address;
 		
 		//delete all streams except manually added ones
@@ -149,9 +163,17 @@ exports.setNetworkInterface = function(address){
 				delete sessions[keys[i]];
 			}
 		}
+		try{
+			socket.setMulticastInterface(address);
+		}catch(e){
+			console.error(e);
+		}
 
-		socket.addMembership('239.255.255.255', address);
-		socket.setMulticastInterface(address);
+		try{
+			socket.addMembership('239.255.255.255', address);
+		}catch(e){
+			cb('Could not bind to multicast Interface!');
+		}
 	}
 }
 

@@ -77,8 +77,6 @@ let app = new Vue({
 					channel2 = channelMappingNumber - 1;
 				}
 
-				console.log(channel1, channel2);
-
 				for(var i = 0; i < app.audiodevices.length; i++){
 					if(app.audiodevices[i].id == app.settings.device && app.audiodevices[i].samplerates.indexOf(stream.samplerate) === -1){
 						alert('Samplerate not supported by audiodevice!');
@@ -242,7 +240,9 @@ if(addresses.length == 0){
 
 app.settings.addr = addresses[0];
 app.network = addresses;
-sdp.init(addresses[0]);
+sdp.init(addresses[0], function(error){
+	app.errors.push(error);
+});
 
 //init audio
 switch(process.platform){
