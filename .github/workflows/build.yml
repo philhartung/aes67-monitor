@@ -45,22 +45,8 @@ jobs:
       - name: Build App
         run: npx electron-packager . AES67 --out=release-builds --icon=./assets/icon --arch=${{ matrix.arch }} --platform=${{ matrix.platform }}
 
-      - name: Zip Build Folder (Linux/macOS)
-        if: runner.os != 'Windows'
-        run: |
-          folder=$(ls -d release-builds/*)
-          cd "$folder"
-          zip -r "../AES67-${{ matrix.platform }}-${{ matrix.arch }}.zip" *
-
-      - name: Zip Build Folder (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          $folder = Get-ChildItem -Directory -Path release-builds | Select-Object -First 1
-          Compress-Archive -Path "$($folder.FullName)\*" -DestinationPath "release-builds/AES67-${{ matrix.platform }}-${{ matrix.arch }}.zip"
-
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: AES67-${{ matrix.platform }}-${{ matrix.arch }}
-          path: release-builds/AES67-${{ matrix.platform }}-${{ matrix.arch }}.zip
+          path: release-builds/AES67-${{ matrix.platform }}-${{ matrix.arch }}
