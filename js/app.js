@@ -224,11 +224,11 @@ var interfaceNames = Object.keys(interfaces);
 var addresses = [];
 
 for(var i = 0; i < interfaceNames.length; i++){
-	var interface = interfaces[interfaceNames[i]];
+	var interfaceInstance = interfaces[interfaceNames[i]];
 
-	for(var j = 0; j < interface.length; j++){
-		if(interface[j].family == 'IPv4' && interface[j].address != '127.0.0.1'){
-			addresses.push(interface[j].address);
+	for(var j = 0; j < interfaceInstance.length; j++){
+		if(interfaceInstance[j].family == 'IPv4' && interfaceInstance[j].address != '127.0.0.1'){
+			addresses.push(interfaceInstance[j].address);
 		}
 	}
 }

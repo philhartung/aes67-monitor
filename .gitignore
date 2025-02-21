@@ -1,5 +1,6 @@
 AES67-darwin-x64/
 AES67-win32-x64/
+release-builds/
 node_modules/
 package-lock.json
 .DS_Store
