@@ -5,17 +5,17 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "npx electron-packager . AES67 --overwrite --platform=darwin,linux --arch=x64,arm64 --out=release-builds --icon=./assets/icon",
-    "buildWin": "npx electron-packager . AES67 --overwrite --platform=win32 --arch=x64 --out=release-builds --icon=./assets/icon"
+    "build": "npx electron-packager . AES67 --overwrite --out=release-builds --icon=./assets/icon"
   },
   "devDependencies": {
     "@electron/packager": "^18.3.6",
+    "@electron/rebuild": "^3.7.1",
     "electron": "^34.2.0"
   },
   "dependencies": {
-    "audify": "1.5.2",
-    "jquery": "^3.5.1",
-    "sdp-transform": "^2.14.1",
+    "audify": "1.9.0",
+    "jquery": "^3.7.1",
+    "sdp-transform": "^2.15.0",
     "vue": "^2.6.11"
   }
 }

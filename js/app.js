@@ -265,13 +265,13 @@ var devices = rtAudio.getDevices();
 
 for(var i = 0; i < devices.length; i++){
 	if(devices[i].outputChannels >= 2){
-		app.audiodevices.push({id: i, name: devices[i].name, samplerates: devices[i].sampleRates});
+		app.audiodevices.push({id: devices[i].id, name: devices[i].name, samplerates: devices[i].sampleRates});
 	}
 }
 
 if(app.audiodevices.length == 0){
 	app.errors.push('No valid audio device found! Please connect an audio device and restart the app.');
-}else if(devices[rtAudio.getDefaultOutputDevice()].outputChannels >= 2){
+}else if(devices.find(item => item.id === rtAudio.getDefaultOutputDevice()).outputChannels >= 2){
 	app.settings.device = rtAudio.getDefaultOutputDevice();
 }else{
 	app.settings.device = app.audiodevices[0].id;

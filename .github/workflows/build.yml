@@ -1,0 +1,66 @@
+name: Build App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: x64
+            platform: linux
+          - os: ubuntu-latest
+            arch: arm64
+            platform: linux
+          - os: windows-latest
+            arch: x64
+            platform: win32
+          - os: macos-latest
+            arch: x64
+            platform: darwin
+          - os: macos-latest
+            arch: arm64
+            platform: darwin
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build App
+        run: npx electron-rebuild --arch=${{ matrix.arch }}
+
+      - name: Build App
+        run: npx electron-packager . AES67 --out=release-builds --icon=./assets/icon --arch=${{ matrix.arch }} --platform=${{ matrix.platform }}
+
+      - name: Zip Build Folder (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          folder=$(ls -d release-builds/*)
+          cd "$folder"
+          zip -r "../AES67-${{ matrix.os }}-${{ matrix.arch }}.zip" *
+
+      - name: Zip Build Folder (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $folder = Get-ChildItem -Directory -Path release-builds | Select-Object -First 1
+          Compress-Archive -Path "$($folder.FullName)\*" -DestinationPath "AES67-${{ matrix.os }}-${{ matrix.arch }}.zip"
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: AES67-${{ matrix.os }}-${{ matrix.arch }}
+          path: release-builds/AES67-${{ matrix.os }}-${{ matrix.arch }}.zip
