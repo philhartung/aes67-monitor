@@ -2,7 +2,8 @@ name: Build App
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - "*"
 
 jobs:
   build:
@@ -11,19 +12,14 @@ jobs:
         include:
           - os: ubuntu-latest
             arch: x64
-            platform: linux
           - os: ubuntu-latest
             arch: arm64
-            platform: linux
           - os: windows-latest
             arch: x64
-            platform: win32
           - os: macos-latest
             arch: x64
-            platform: darwin
           - os: macos-latest
             arch: arm64
-            platform: darwin
 
     runs-on: ${{ matrix.os }}
 
@@ -34,19 +30,26 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
+
+      - name: Set version
+        run: |
+          TAG=$(echo "${GITHUB_REF}" | sed 's/refs\/tags\///')
+          npm version "$TAG" --no-git-tag-version
 
       - name: Install Dependencies
         run: npm install
 
       - name: Build App
-        run: npx electron-rebuild --arch=${{ matrix.arch }}
-
-      - name: Build App
-        run: npx electron-packager . AES67 --out=release-builds --icon=./assets/icon --arch=${{ matrix.arch }} --platform=${{ matrix.platform }}
+        run: npx electron-builder --${{ matrix.arch }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: AES67-${{ matrix.platform }}-${{ matrix.arch }}
-          path: release-builds/AES67-${{ matrix.platform }}-${{ matrix.arch }}
+          name: Artifacts-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            release-builds/*.msi
+            release-builds/*.zip
+            release-builds/*.deb
+            release-builds/*.rpm
+            release-builds/*.dmg

@@ -1,0 +1,13 @@
+appId: "com.phlhar.stream-monitor"
+productName: "Stream Monitor"
+mac:
+  icon: "icon/icon.ico"
+  target: ["dmg", "zip"]
+win:
+  icon: "icon/icon.png"
+  target: ["msi", "zip"]
+linux:
+  icon: "icon/icon.png"
+  target: ["deb", "rpm", "zip"]
+directories:
+  output: release-builds
