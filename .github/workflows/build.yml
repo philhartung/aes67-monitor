@@ -44,7 +44,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Artifacts-${{ matrix.platform }}-${{ matrix.arch }}
+          name: Artifacts-${{ runner.os }}-${{ matrix.arch }}
           path: |
             release-builds/*.msi
             release-builds/*.zip
