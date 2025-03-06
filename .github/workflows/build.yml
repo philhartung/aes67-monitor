@@ -71,8 +71,8 @@ jobs:
           name: Stream Monitor ${{ github.ref_name }}
           draft: true
           files: |
-            artifacts/*.msi
-            artifacts/*.zip
-            artifacts/*.deb
-            artifacts/*.rpm
-            artifacts/*.dmg
+            artifacts/**/*.msi
+            artifacts/**/*.zip
+            artifacts/**/*.deb
+            artifacts/**/*.rpm
+            artifacts/**/*.dmg
