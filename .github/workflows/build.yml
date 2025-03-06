@@ -1,4 +1,4 @@
-name: Build App
+name: Build and Release App
 
 on:
   push:
@@ -54,3 +54,25 @@ jobs:
             release-builds/*.deb
             release-builds/*.rpm
             release-builds/*.dmg
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Stream Monitor ${{ github.ref_name }}
+          draft: true
+          files: |
+            artifacts/*.msi
+            artifacts/*.zip
+            artifacts/*.deb
+            artifacts/*.rpm
+            artifacts/*.dmg
