@@ -38,7 +38,10 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build App
+      - name: Build Frontend
+        run: npm run build
+
+      - name: Package App
         run: npx electron-builder --publish never --${{ matrix.arch }}
 
       - name: Upload Artifacts

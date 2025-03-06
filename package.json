@@ -12,7 +12,7 @@
 	"main": "main.js",
 	"scripts": {
 		"serve": "vue-cli-service serve --port 8888",
-		"build": "vue-cli-service build && electron-builder",
+		"build": "vue-cli-service build",
 		"lint": "vue-cli-service lint",
 		"format": "prettier --write .",
 		"start": "electron ."
