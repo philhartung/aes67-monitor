@@ -33,9 +33,7 @@ jobs:
           node-version: "22"
 
       - name: Set version
-        run: |
-          TAG=$(echo "${GITHUB_REF}" | sed 's/refs\/tags\///')
-          npm version "$TAG" --no-git-tag-version
+        run: npm version "$GITHUB_REF_NAME" --no-git-tag-version
 
       - name: Install Dependencies
         run: npm install
