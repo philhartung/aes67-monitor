@@ -11,8 +11,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
+            arch: "--arm64 --x64"
           - os: windows-latest
+            arch: "--x64"
           - os: macos-latest
+            arch: "--arm64 --x64"
 
     runs-on: ${{ matrix.os }}
 
@@ -35,7 +38,7 @@ jobs:
         run: npm run build
 
       - name: Package App
-        run: npx electron-builder --publish never --arm64 --x64
+        run: npx electron-builder --publish never ${{ matrix.arch }}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
