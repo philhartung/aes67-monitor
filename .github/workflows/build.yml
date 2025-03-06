@@ -33,7 +33,7 @@ jobs:
           node-version: "22"
 
       - name: Set version
-        run: npm version ${{ env.GITHUB_REF_NAME }} --no-git-tag-version
+        run: npm version ${{ github.ref_name }} --no-git-tag-version
 
       - name: Install Dependencies
         run: npm install
