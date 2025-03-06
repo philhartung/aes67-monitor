@@ -1,5 +1,6 @@
 appId: "com.phlhar.stream-monitor"
 productName: "Stream Monitor"
+artifactName: "${name}-${version}-${os}-${arch}.${ext}"
 mac:
   icon: "icon/icon.ico"
   target: ["dmg", "zip"]

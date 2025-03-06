@@ -56,7 +56,7 @@ function createMainWindow() {
 		height: 1080,
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
-			devTools: !app.isPackaged,
+			/* devTools: !app.isPackaged, */
 		},
 	});
 

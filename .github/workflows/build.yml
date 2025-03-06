@@ -11,15 +11,8 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            arch: x64
-          - os: ubuntu-latest
-            arch: arm64
           - os: windows-latest
-            arch: x64
           - os: macos-latest
-            arch: x64
-          - os: macos-latest
-            arch: arm64
 
     runs-on: ${{ matrix.os }}
 
@@ -42,12 +35,12 @@ jobs:
         run: npm run build
 
       - name: Package App
-        run: npx electron-builder --publish never --${{ matrix.arch }}
+        run: npx electron-builder --publish never --arm64 --x64
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Artifacts-${{ runner.os }}-${{ matrix.arch }}
+          name: Artifacts-${{ runner.os }}
           path: |
             release-builds/*.msi
             release-builds/*.zip
