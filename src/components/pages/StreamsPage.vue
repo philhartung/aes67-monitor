@@ -21,8 +21,18 @@
 						{{ sortOrder === 1 ? "▲" : "▼" }}
 					</span>
 				</th>
-				<th>Tags</th>
-				<th>Info</th>
+				<th @click="setSort('tags')" style="cursor: pointer">
+					Tags
+					<span v-if="sortKey === 'tags'">
+						{{ sortOrder === 1 ? "▲" : "▼" }}
+					</span>
+				</th>
+				<th @click="setSort('info')" style="cursor: pointer">
+					Info
+					<span v-if="sortKey === 'info'">
+						{{ sortOrder === 1 ? "▲" : "▼" }}
+					</span>
+				</th>
 				<th @click="setSort('address')" style="cursor: pointer">
 					Device Address
 					<span v-if="sortKey === 'address'">
@@ -116,7 +126,6 @@
 
 <script>
 import {
-	// Importing application-wide functions and reactive variables for stream management.
 	searchStreams,
 	streams,
 	streamCount,
@@ -133,52 +142,48 @@ import { ref, computed } from "vue";
 export default {
 	name: "StreamsPage",
 	setup() {
-		// Reactive variables for sorting streams.
-		const sortKey = ref("name"); // Default sort by "name"
-		const sortOrder = ref(1); // 1 for ascending order, -1 for descending order
+		const sortKey = ref("name");
+		const sortOrder = ref(1);
 
-		// Function to toggle or set the sorting key and order.
 		function setSort(key) {
 			if (sortKey.value === key) {
-				// If the same key is clicked again, reverse the sorting order.
 				sortOrder.value = -sortOrder.value;
 			} else {
-				// If a different key is clicked, change sort key and reset order to ascending.
 				sortKey.value = key;
 				sortOrder.value = 1;
 			}
 		}
 
-		// Helper function to retrieve the value for sorting based on the key.
 		function getSortValue(stream, key) {
 			switch (key) {
 				case "name":
-					// Returns the stream name for sorting.
 					return stream.name;
 				case "mcast":
-					// Returns the multicast address for sorting.
 					return stream.mcast;
 				case "address":
-					// Returns the device address from the stream's origin.
 					return stream.origin.address;
 				case "format":
-					// Returns a formatted string only if the stream is supported.
 					return stream.isSupported
 						? `${stream.codec} ${stream.samplerate}Hz ${stream.channels}`
 						: "";
+				case "info":
+					return stream.media[0].description ? stream.media[0].description : "";
+				case "tags":
+					var tags = "";
+					if (stream.dante) tags += "Dante ";
+					if (stream.manual) tags += "Manual ";
+					if (stream.announce) tags += "SAP ";
+					return tags.trim();
 				default:
-					// Returns generic property based on the key.
 					return stream[key];
 			}
 		}
 
-		// Computed property that returns a sorted list of streams based on the selected sort key and order.
 		const sortedStreams = computed(() => {
 			const streamsList = searchStreams();
 			return streamsList.slice().sort((a, b) => {
 				let propA = getSortValue(a, sortKey.value);
 				let propB = getSortValue(b, sortKey.value);
-				// For string values, perform case-insensitive comparison.
 				if (typeof propA === "string") propA = propA.toLowerCase();
 				if (typeof propB === "string") propB = propB.toLowerCase();
 				if (propA < propB) return -1 * sortOrder.value;
@@ -187,7 +192,6 @@ export default {
 			});
 		});
 
-		// Expose methods and reactive variables to the template.
 		return {
 			sortedStreams,
 			setSort,
@@ -206,7 +210,6 @@ export default {
 		};
 	},
 	methods: {
-		// Method to delete a manual stream by sending a message through the electronAPI.
 		deleteStream(id) {
 			window.electronAPI.sendMessage({ type: "delete", data: id });
 		},
