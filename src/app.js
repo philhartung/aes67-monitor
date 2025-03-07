@@ -99,8 +99,9 @@ export const searchStreams = () => {
 					.toLowerCase()
 					.includes(search.value.streams.toLowerCase()) ||
 				stream.id.includes(search.value.streams)) &&
-				stream.isSupported) ||
-			!persistentData.value.settings.hideUnsupported
+				(stream.isSupported || !persistentData.value.settings.hideUnsupported)
+			)
+			
 		);
 	});
 

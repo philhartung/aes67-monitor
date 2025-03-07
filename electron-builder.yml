@@ -16,6 +16,7 @@ win:
   icon: "icon/icon.png"
   target:
     - target: msi
+      oneClick: false
       arch: [x64]
     - target: zip
       arch: [x64]

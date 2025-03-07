@@ -89,8 +89,9 @@ function createMainWindow() {
 function handleIpcMessage(message) {
 	switch (message.type) {
 		case "update":
-			updateSystem();
 			sendMessage("updatePersistentData", persistentData);
+			updateSystem();
+			sdpProcess.send({ type: "update" });
 			break;
 		case "setAudioInterface":
 			setAudioInterface(message.data);

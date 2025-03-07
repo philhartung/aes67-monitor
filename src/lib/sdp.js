@@ -301,6 +301,9 @@ process.on("message", (message) => {
 		case "interface":
 			setNetworkInterface(message.data);
 			break;
+		case "update":
+			sendUpdate();
+			break;
 	}
 });
 

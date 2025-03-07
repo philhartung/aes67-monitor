@@ -22,7 +22,7 @@
 						selectedStream.media[0].tsRefClocks[0].clksrcExt.toUpperCase()
 					}}</span>
 				</li>
-				<li>
+				<li v-if="selectedStream.isSupported">
 					<b>Format</b><br />
 					<span class="copy"
 						>{{ selectedStream.channels }} channel @
