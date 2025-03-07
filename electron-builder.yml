@@ -4,6 +4,7 @@ artifactName: "${name}-${version}-${os}-${arch}.${ext}"
 directories:
   output: release-builds
 
+# OS specific settings
 mac:
   icon: "icon/icon.ico"
   target:
@@ -16,7 +17,6 @@ win:
   icon: "icon/icon.png"
   target:
     - target: msi
-      oneClick: false
       arch: [x64]
     - target: zip
       arch: [x64]
@@ -30,3 +30,7 @@ linux:
       arch: [x64, arm64]
     - target: zip
       arch: [x64, arm64]
+
+# Target specific settings
+msi:
+  oneClick: false

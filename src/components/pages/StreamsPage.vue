@@ -89,7 +89,11 @@
 								</option>
 							</template>
 						</select>
-						<small v-else class="d-inline-flex px-2 py-1 fw-semibold text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-2">{{ stream.unsupportedReason }}</small>
+						<small
+							v-else
+							class="d-inline-flex px-2 py-1 fw-semibold text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-2"
+							>{{ stream.unsupportedReason }}</small
+						>
 					</td>
 					<td>
 						<button

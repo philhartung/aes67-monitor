@@ -92,16 +92,12 @@ export const setSidebarStatus = (status) => {
 export const searchStreams = () => {
 	let filteredStream = streams.value.filter((stream) => {
 		return (
-			((stream.name
-				.toLowerCase()
-				.includes(search.value.streams.toLowerCase()) ||
+			(stream.name.toLowerCase().includes(search.value.streams.toLowerCase()) ||
 				stream.origin.address
 					.toLowerCase()
 					.includes(search.value.streams.toLowerCase()) ||
 				stream.id.includes(search.value.streams)) &&
-				(stream.isSupported || !persistentData.value.settings.hideUnsupported)
-			)
-			
+			(stream.isSupported || !persistentData.value.settings.hideUnsupported)
 		);
 	});
 
