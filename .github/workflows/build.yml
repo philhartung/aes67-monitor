@@ -1,29 +1,15 @@
-name: Build App
+name: Build and Release App
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - "*"
 
 jobs:
   build:
     strategy:
       matrix:
-        include:
-          - os: ubuntu-latest
-            arch: x64
-            platform: linux
-          - os: ubuntu-latest
-            arch: arm64
-            platform: linux
-          - os: windows-latest
-            arch: x64
-            platform: win32
-          - os: macos-latest
-            arch: x64
-            platform: darwin
-          - os: macos-latest
-            arch: arm64
-            platform: darwin
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -34,19 +20,49 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
+
+      - name: Set version
+        run: npm version ${{ github.ref_name }} --no-git-tag-version
 
       - name: Install Dependencies
         run: npm install
 
-      - name: Build App
-        run: npx electron-rebuild --arch=${{ matrix.arch }}
+      - name: Build Frontend
+        run: npm run build
 
-      - name: Build App
-        run: npx electron-packager . AES67 --out=release-builds --icon=./assets/icon --arch=${{ matrix.arch }} --platform=${{ matrix.platform }}
+      - name: Package App
+        run: npx electron-builder --publish never
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: AES67-${{ matrix.platform }}-${{ matrix.arch }}
-          path: release-builds/AES67-${{ matrix.platform }}-${{ matrix.arch }}
+          name: Artifacts-${{ runner.os }}
+          path: |
+            release-builds/*.msi
+            release-builds/*.zip
+            release-builds/*.deb
+            release-builds/*.rpm
+            release-builds/*.dmg
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Stream Monitor ${{ github.ref_name }}
+          draft: true
+          files: |
+            artifacts/**/*.msi
+            artifacts/**/*.zip
+            artifacts/**/*.deb
+            artifacts/**/*.rpm
+            artifacts/**/*.dmg

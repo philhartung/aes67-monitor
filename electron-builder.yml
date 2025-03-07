@@ -1,0 +1,36 @@
+appId: "com.phlhar.stream-monitor"
+productName: "Stream Monitor"
+artifactName: "${name}-${version}-${os}-${arch}.${ext}"
+directories:
+  output: release-builds
+
+# OS specific settings
+mac:
+  icon: "icon/icon.ico"
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: zip
+      arch: [x64, arm64]
+
+win:
+  icon: "icon/icon.png"
+  target:
+    - target: msi
+      arch: [x64]
+    - target: zip
+      arch: [x64]
+
+linux:
+  icon: "icon/icon.png"
+  target:
+    - target: deb
+      arch: [x64, arm64]
+    - target: rpm
+      arch: [x64, arm64]
+    - target: zip
+      arch: [x64, arm64]
+
+# Target specific settings
+msi:
+  oneClick: false
