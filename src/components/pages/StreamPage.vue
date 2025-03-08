@@ -10,13 +10,15 @@
 					<b>Address</b><br />
 					<span class="copy">{{ selectedStream.origin.address }}</span>
 				</li>
-				<li>
+				<li v-if="selectedStream.media[0] && selectedStream.media[0].port">
 					<b>Multicast</b><br />
 					<span class="copy"
 						>{{ selectedStream.mcast }}:{{ selectedStream.media[0].port }}</span
 					>
 				</li>
-				<li>
+				<li
+					v-if="selectedStream.media[0] && selectedStream.media[0].tsRefClocks"
+				>
 					<b>Clocksource</b><br />
 					<span class="copy">{{
 						selectedStream.media[0].tsRefClocks[0].clksrcExt.toUpperCase()
@@ -31,12 +33,14 @@
 				</li>
 				<li>
 					<b>Tags</b><br />
-					<span class="badge bg-primary" v-if="selectedStream.dante"
+					<span class="badge bg-primary me-1" v-if="selectedStream.dante"
 						>Dante</span
 					>
-					&nbsp;
-					<span class="badge bg-primary" v-if="selectedStream.manual"
+					<span class="badge bg-primary me-1" v-if="selectedStream.manual"
 						>Manual</span
+					>
+					<span class="badge bg-primary me-1" v-if="selectedStream.announce"
+						>SAP</span
 					>
 				</li>
 			</ul>

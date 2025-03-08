@@ -57,11 +57,13 @@
 					<td>{{ stream.name }}</td>
 					<td>{{ stream.mcast }}:{{ stream.media[0].port }}</td>
 					<td>
-						<span class="badge bg-primary" v-if="stream.dante">Dante</span>
-						&nbsp;
-						<span class="badge bg-primary" v-if="stream.manual">Manual</span>
-						&nbsp;
-						<span class="badge bg-primary" v-if="stream.announce">SAP</span>
+						<span class="badge bg-primary me-1" v-if="stream.dante">Dante</span>
+						<span class="badge bg-primary me-1" v-if="stream.manual"
+							>Manual</span
+						>
+						<span class="badge bg-primary me-1" v-if="stream.announce"
+							>SAP</span
+						>
 					</td>
 					<td>
 						{{ stream.media[0].description ? stream.media[0].description : "" }}
