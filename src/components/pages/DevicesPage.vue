@@ -20,7 +20,7 @@
 		<tbody>
 			<tr v-for="device in searchDevices" :key="device">
 				<td>
-					<span v-if="editDevice != device">{{
+					<span v-if="editDevice != device" class="copy">{{
 						persistentData.devices[device].name
 					}}</span>
 					<input
@@ -33,7 +33,7 @@
 				<td>{{ device }}</td>
 				<td>{{ persistentData.devices[device].count }}</td>
 				<td>
-					<span v-if="editDevice != device">{{
+					<span v-if="editDevice != device" class="copy">{{
 						persistentData.devices[device].description
 					}}</span>
 					<input

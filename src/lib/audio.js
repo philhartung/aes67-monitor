@@ -18,23 +18,25 @@ const start = function (args) {
 
 	client = dgram.createSocket({ type: "udp4", reuseAddr: true });
 
-	//other constants
+	// Error handling
+	client.on("error", (err) => {
+		console.error(`Socket error: ${err.stack}`);
+	});
+
+	client.on("listening", function () {
+		client.addMembership(args.mcast, args.networkInterface);
+	});
+
+	// Constants
 	const bufferSize = 1024;
 	const jitterBufferSize = args.jitterBufferEnabled ? args.jitterBufferSize : 0;
-
-	//set up constants for lates use
 	const samplesPerPacket = Math.round((args.samplerate / 1000) * args.ptime);
 	const bytesPerSample = args.codec == "L24" ? 3 : 2;
 	const pcmDataSize = samplesPerPacket * bytesPerSample * args.channels;
 	const packetSize = pcmDataSize + 12;
 	const pcmL16out = Buffer.alloc(samplesPerPacket * 4 * bufferSize);
 
-	//vars
 	let seqInternal = -1;
-
-	client.on("listening", function () {
-		client.addMembership(args.mcast, args.networkInterface);
-	});
 
 	client.on("message", function (buffer, remote) {
 		if (buffer.length != packetSize || remote.address != args.addr) {
@@ -79,7 +81,7 @@ const start = function (args) {
 	rtAudio = new RtAudio(args.audioAPI);
 	let devices = rtAudio.getDevices();
 	let id;
-	var found = false;
+	let found = false;
 	let defaultOutputDevice;
 
 	for (let i = 0; i < devices.length; i++) {
@@ -104,15 +106,19 @@ const start = function (args) {
 		id = defaultOutputDevice.id;
 	}
 
-	rtAudio.openStream(
-		{ deviceId: id, nChannels: 2, firstChannel: 0 },
-		null,
-		RtAudioFormat.RTAUDIO_SINT16,
-		args.samplerate,
-		samplesPerPacket,
-		"AES67 Monitor"
-	);
-	rtAudio.start();
+	try {
+		rtAudio.openStream(
+			{ deviceId: id, nChannels: 2, firstChannel: 0 },
+			null,
+			RtAudioFormat.RTAUDIO_SINT16,
+			args.samplerate,
+			samplesPerPacket,
+			"AES67 Monitor"
+		);
+		rtAudio.start();
+	} catch (error) {
+		console.error("Error during stream setup:", error);
+	}
 
 	client.bind(5004);
 	streamOpen = true;

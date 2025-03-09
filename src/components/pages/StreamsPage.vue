@@ -70,7 +70,7 @@
 					</td>
 					<td>{{ stream.origin.address }}</td>
 					<td>
-						<span v-if="stream.isSupported">
+						<span v-if="stream.isSupported" class="copy">
 							{{ stream.codec }} / {{ stream.samplerate }}Hz /
 							{{ stream.channels }}
 						</span>
