@@ -55,7 +55,25 @@
 			<template v-for="stream in sortedStreams" :key="stream.id">
 				<tr>
 					<td>{{ stream.name }}</td>
-					<td>{{ stream.mcast }}:{{ stream.media[0].port }}</td>
+					<td>
+						<span
+							v-if="stream.media.length > 1 && stream.isSupported"
+							class="copy"
+						>
+							<select
+								class="form-select form-select-sm"
+								v-model="streamIndex[stream.id]"
+								:disabled="stream.id === playing"
+							>
+								<template v-for="(media, index) in stream.media" :key="index">
+									<option :value="index">
+										{{ media.connection.ip.split("/")[0] }}:{{ media.port }}
+									</option>
+								</template>
+							</select>
+						</span>
+						<span v-else class="copy">{{ stream.mcast }}:{{ stream.media[0].port }}</span>
+					</td>
 					<td>
 						<span class="badge bg-primary me-1" v-if="stream.dante">Dante</span>
 						<span class="badge bg-primary me-1" v-if="stream.manual"
@@ -68,7 +86,9 @@
 					<td>
 						{{ stream.media[0].description ? stream.media[0].description : "" }}
 					</td>
-					<td>{{ stream.origin.address }}</td>
+					<td>
+						{{ stream.origin.address }}
+					</td>
 					<td>
 						<span v-if="stream.isSupported" class="copy">
 							{{ stream.codec }} / {{ stream.samplerate }}Hz /
@@ -142,6 +162,7 @@ import {
 	visibleStreams,
 	playing,
 	persistentData,
+	streamIndex,
 } from "../../app.js";
 import { ref, computed } from "vue";
 
@@ -213,6 +234,7 @@ export default {
 			visibleStreams,
 			playing,
 			persistentData,
+			streamIndex,
 		};
 	},
 	methods: {

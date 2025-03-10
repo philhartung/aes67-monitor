@@ -33,13 +33,26 @@ const start = function (args) {
 	const samplesPerPacket = Math.round((args.samplerate / 1000) * args.ptime);
 	const bytesPerSample = args.codec == "L24" ? 3 : 2;
 	const pcmDataSize = samplesPerPacket * bytesPerSample * args.channels;
-	const packetSize = pcmDataSize + 12;
 	const pcmL16out = Buffer.alloc(samplesPerPacket * 4 * bufferSize);
 
 	let seqInternal = -1;
 
 	client.on("message", function (buffer, remote) {
-		if (buffer.length != packetSize || remote.address != args.addr) {
+		const firstByte = buffer.readUInt8(0);
+		const csrcCount = firstByte & 0x0f;
+		let headerLength = 12 + csrcCount * 4;
+		const extensionFlag = (firstByte >> 4) & 0x01;
+
+		if (extensionFlag) {
+			let extIndex = 12 + csrcCount * 4;
+			const extensionLength = buffer.readUInt16BE(extIndex + 2);
+			headerLength += 4 + extensionLength * 4;
+		}
+
+		if (
+			buffer.length != (pcmDataSize + headerLength) ||
+			(args.filter && remote.address != args.filterAddr)
+		) {
 			return;
 		}
 
@@ -49,13 +62,13 @@ const start = function (args) {
 		for (let sample = 0; sample < samplesPerPacket; sample++) {
 			pcmL16out.writeUInt16LE(
 				buffer.readUInt16BE(
-					(sample * args.channels + args.ch1Map) * bytesPerSample + 12
+					(sample * args.channels + args.ch1Map) * bytesPerSample + headerLength
 				),
 				sample * 4 + bufferIndex
 			);
 			pcmL16out.writeUInt16LE(
 				buffer.readUInt16BE(
-					(sample * args.channels + args.ch2Map) * bytesPerSample + 12
+					(sample * args.channels + args.ch2Map) * bytesPerSample + headerLength
 				),
 				sample * 4 + bufferIndex + 2
 			);
@@ -63,7 +76,7 @@ const start = function (args) {
 
 		if (seqInternal != -1) {
 			let bufferIndex = seqInternal * samplesPerPacket * 4;
-			let outBuf = pcmL16out.slice(
+			let outBuf = pcmL16out.subarray(
 				bufferIndex,
 				bufferIndex + samplesPerPacket * 4
 			);

@@ -30,17 +30,6 @@ const preParse = function (sdp) {
 		sdp.description = sdp.media[0].description;
 	}
 
-	//put all filter relevant stuff into one string (name, description, multicast, unicast host)
-	sdp.filterBy = (
-		sdp.name +
-		" " +
-		sdp.origin.address +
-		" " +
-		sdp.description +
-		" " +
-		sdp.mcast
-	).toLowerCase();
-
 	if (sdp.isSupported) {
 		sdp.codec = sdp.media[0].rtp[0].codec;
 		sdp.samplerate = sdp.media[0].rtp[0].rate;
@@ -60,37 +49,39 @@ const isSupportedStream = function (sdp) {
 		return sdp;
 	}
 
-	if (sdp.media[0].type != "audio" || sdp.media[0].protocol != "RTP/AVP") {
-		sdp.isSupported = false;
-		sdp.unsupportedReason = "Unsupported media type";
-		return sdp;
-	}
+	for (let i = 0; i < sdp.media.length; i++) {
+		if (sdp.media[i].type != "audio" || sdp.media[i].protocol != "RTP/AVP") {
+			sdp.isSupported = false;
+			sdp.unsupportedReason = "Unsupported media type";
+			return sdp;
+		}
 
-	if (sdp.media[0].rtp.length != 1) {
-		sdp.isSupported = false;
-		sdp.unsupportedReason = "Unsupported rtpmap";
-		return sdp;
-	}
+		if (sdp.media[i].rtp.length != 1) {
+			sdp.isSupported = false;
+			sdp.unsupportedReason = "Unsupported rtpmap";
+			return sdp;
+		}
 
-	if (supportedSampleRates.indexOf(sdp.media[0].rtp[0].rate) === -1) {
-		sdp.isSupported = false;
-		sdp.unsupportedReason = "Unsupported samplerate";
-		return sdp;
-	}
+		if (supportedSampleRates.indexOf(sdp.media[i].rtp[0].rate) === -1) {
+			sdp.isSupported = false;
+			sdp.unsupportedReason = "Unsupported samplerate";
+			return sdp;
+		}
 
-	if (
-		sdp.media[0].rtp[0].codec != "L24" &&
-		sdp.media[0].rtp[0].codec != "L16"
-	) {
-		sdp.isSupported = false;
-		sdp.unsupportedReason = "Unsupported codec";
-		return sdp;
-	}
+		if (
+			sdp.media[i].rtp[0].codec != "L24" &&
+			sdp.media[i].rtp[0].codec != "L16"
+		) {
+			sdp.isSupported = false;
+			sdp.unsupportedReason = "Unsupported codec";
+			return sdp;
+		}
 
-	if (sdp.media[0].rtp[0].encoding < 1 || sdp.media[0].rtp[0].encoding > 64) {
-		sdp.isSupported = false;
-		sdp.unsupportedReason = "Unsupported channel number";
-		return sdp;
+		if (sdp.media[i].rtp[0].encoding < 1 || sdp.media[i].rtp[0].encoding > 64) {
+			sdp.isSupported = false;
+			sdp.unsupportedReason = "Unsupported channel number";
+			return sdp;
+		}
 	}
 
 	sdp.isSupported = true;
@@ -158,7 +149,7 @@ const announceStream = function (rawSDP, addr, header) {
 	let sdpMsg = Buffer.concat([sapHeader, sapContentType, sdpBody]);
 
 	socket.send(sdpMsg, 9875, "239.255.255.255", function (err) {
-		console.error("Error sending SDP Message", err);
+		if (err) console.error("Error sending SDP Message", err);
 	});
 };
 

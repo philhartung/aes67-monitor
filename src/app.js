@@ -11,6 +11,7 @@ export const audioInterfaces = ref([]);
 export const networkInterfaces = ref([]);
 export const selectedStream = ref(null);
 export const selectedChannel = ref([]);
+export const streamIndex = ref([]);
 export const visibleStreams = ref(0);
 export const playing = ref("");
 export const persistentData = ref({
@@ -158,7 +159,6 @@ export const getTextareaRowNumber = () => {
 export const viewStream = (stream) => {
 	page.value = "stream";
 	selectedStream.value = stream;
-	console.log(stream.name);
 };
 
 export const isDevMode = () => {
@@ -212,6 +212,7 @@ export const getChannelSelectValues = (stream) => {
 
 	if (!selectedChannel.value[stream.id]) {
 		selectedChannel.value[stream.id] = values[0].value;
+		streamIndex.value[stream.id] = 0;
 	}
 
 	return values;
@@ -225,26 +226,53 @@ export const playStream = (stream) => {
 		playing.value = stream.id;
 
 		let channelMapping = selectedChannel.value[stream.id].split(",");
+		let streamMapping = streamIndex.value[stream.id];
 		let channel0 = parseInt(channelMapping[0]);
 		let channel1 = parseInt(channelMapping[1]);
 
-		sendMessage({
-			type: "play",
-			data: {
+		if (stream.media[streamMapping] && stream.media[streamMapping].rtp[0]) {
+			let samplerate = stream.media[streamMapping].rtp[0].rate;
+			let channels = stream.media[streamMapping].rtp[0].encoding;
+			let ptime = stream.media[streamMapping].ptime;
+			let codec = stream.media[streamMapping].rtp[0].codec;
+			let port = stream.media[streamMapping].port;
+			let mcast = stream.mcast;
+			let filter = false;
+			let filterAddr = "";
+
+			if (streamMapping > 0) {
+				mcast = stream.media[streamMapping].connection.ip.split("/")[0];
+			}
+
+			if (stream.media[streamMapping].sourceFilter) {
+				filter = true;
+				filterAddr = stream.media[streamMapping].sourceFilter.srcList;
+			}
+
+			let data = {
 				id: stream.id,
-				mcast: stream.mcast,
-				port: stream.media[0].port,
-				addr: stream.origin.address,
-				codec: stream.codec,
-				ptime: stream.media[0].ptime,
-				samplerate: stream.samplerate,
-				channels: stream.channels,
+				mcast: mcast,
+				port: port,
+				codec: codec,
+				ptime: ptime,
+				samplerate: samplerate,
+				channels: channels,
 				ch1Map: channel0,
 				ch2Map: channel1,
 				jitterBufferEnabled: persistentData.value.settings.bufferEnabled,
 				jitterBufferSize: persistentData.value.settings.bufferSize,
-			},
-		});
+				filter: filter,
+				filterAddr: filterAddr,
+			};
+
+			console.log(data);
+			sendMessage({
+				type: "play",
+				data: data,
+			});
+		} else {
+			console.error("Error playing stream");
+		}
 	}
 };
 
