@@ -133,12 +133,17 @@ socket.on("error", function (error) {
 	}
 });
 
-const announceStream = function (rawSDP, addr, header) {
+const announceStream = function (rawSDP, addr, header, del) {
 	let sapHeader = Buffer.alloc(8);
 	let sapContentType = Buffer.from("application/sdp\0");
 	let ip = addr.split(".");
 
-	sapHeader.writeUInt8(0x20);
+	if (del) {
+		sapHeader.writeUInt8(0x20 | 0x4, 0);
+	} else {
+		sapHeader.writeUInt8(0x20, 0);
+	}
+
 	sapHeader.writeUInt16LE(header, 2); //needs to be random per Stream change because of Dante Controller
 	sapHeader.writeUInt8(parseInt(ip[0]), 4);
 	sapHeader.writeUInt8(parseInt(ip[1]), 5);
@@ -223,10 +228,24 @@ const addStream = function (rawSDP, announce) {
 	sdp.announce = announce;
 
 	sessions[sdp.id] = preParse(sdp);
+
+	if (announce) {
+		announceStream(rawSDP, sessions[sdp.id].origin.address, sdp.header, false);
+	}
+
 	sendUpdate();
 };
 
 const deleteStream = function (id) {
+	if (sessions[id].announce) {
+		announceStream(
+			sessions[id].raw,
+			sessions[id].origin.address,
+			sessions[id].header,
+			true
+		);
+	}
+
 	delete sessions[id];
 	sendUpdate();
 };
@@ -264,7 +283,8 @@ setInterval(function () {
 			announceStream(
 				rawSDP,
 				sessions[keys[i]].origin.address,
-				sessions[keys[i]].header
+				sessions[keys[i]].header,
+				false
 			);
 		}
 	}

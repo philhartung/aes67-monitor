@@ -72,7 +72,9 @@
 								</template>
 							</select>
 						</span>
-						<span v-else class="copy">{{ stream.mcast }}:{{ stream.media[0].port }}</span>
+						<span v-else class="copy"
+							>{{ stream.mcast }}:{{ stream.media[0].port }}</span
+						>
 					</td>
 					<td>
 						<span class="badge bg-primary me-1" v-if="stream.dante">Dante</span>

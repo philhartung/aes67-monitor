@@ -50,7 +50,7 @@ const start = function (args) {
 		}
 
 		if (
-			buffer.length != (pcmDataSize + headerLength) ||
+			buffer.length != pcmDataSize + headerLength ||
 			(args.filter && remote.address != args.filterAddr)
 		) {
 			return;
