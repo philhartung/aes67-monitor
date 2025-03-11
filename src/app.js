@@ -153,7 +153,9 @@ export const viewDevice = (device) => {
 };
 
 export const getTextareaRowNumber = () => {
-	return selectedStream.value.raw.split("\n").length - 1;
+	return selectedStream.value.raw
+		.split("\n")
+		.filter((line) => line.trim() !== "").length;
 };
 
 export const viewStream = (stream) => {
