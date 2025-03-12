@@ -181,7 +181,6 @@ span.copy::selection {
 
 #search-input {
 	float: right;
-	display: inline-block;
 	width: 25%;
 	margin-right: 10px;
 }

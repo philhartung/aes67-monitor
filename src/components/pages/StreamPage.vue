@@ -29,20 +29,45 @@
 						selectedStream.dante ||
 						selectedStream.manual ||
 						selectedStream.announce ||
+						(stream.groups &&
+							stream.groups[0] &&
+							stream.groups[0].type == 'DUP') ||
 						!selectedStream.isSupported
 					"
 				>
 					<b>Tags</b><br />
-					<span class="badge bg-primary me-1" v-if="selectedStream.dante"
+					<span
+						class="badge bg-primary me-1"
+						title="Dante device"
+						v-if="selectedStream.dante"
 						>Dante</span
 					>
-					<span class="badge bg-primary me-1" v-if="selectedStream.manual"
+					<span
+						class="badge bg-primary me-1"
+						title="ST 2022-7 redundant stream"
+						v-if="
+							selectedStream.groups &&
+							selectedStream.groups[0] &&
+							selectedStream.groups[0].type == 'DUP'
+						"
+						>2022-7</span
+					>
+					<span
+						class="badge bg-secondary me-1"
+						title="Manually added stream"
+						v-if="selectedStream.manual"
 						>Manual</span
 					>
-					<span class="badge bg-primary me-1" v-if="selectedStream.announce"
+					<span
+						class="badge bg-secondary me-1"
+						title="Stream is broadcasted on the network via SAP"
+						v-if="selectedStream.announce"
 						>SAP</span
 					>
-					<span class="badge bg-danger me-1" v-if="!selectedStream.isSupported"
+					<span
+						class="badge bg-danger me-1"
+						:title="selectedStream.unsupportedReason"
+						v-if="!selectedStream.isSupported"
 						>Unsupported</span
 					>
 				</li>
@@ -61,7 +86,10 @@
 					v-for="(media, index) in selectedStream.media"
 					:key="index"
 				>
-					<h5>Media {{ index + 1 }}</h5>
+					<h5>
+						Media
+						<span v-if="selectedStream.media.length > 1">#{{ index + 1 }}</span>
+					</h5>
 					<ul class="ul-hidden">
 						<li v-if="media.mid">
 							<b>Stream Identification</b><br />
@@ -88,7 +116,13 @@
 						</li>
 						<li>
 							<b>Codec</b><br />
-							<span class="copy">{{ media.rtp[0].codec }}</span>
+							<span v-if="media.rtp[0].codec == 'L24'" class="copy"
+								>24-bit PCM</span
+							>
+							<span v-else-if="media.rtp[0].codec == 'L16'" class="copy"
+								>16-bit PCM</span
+							>
+							<span v-else class="copy">{{ media.rtp[0].codec }}</span>
 						</li>
 						<li v-if="media.ptime">
 							<b>Packet Time</b><br />

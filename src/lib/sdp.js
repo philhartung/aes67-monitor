@@ -237,7 +237,7 @@ const addStream = function (rawSDP, announce) {
 };
 
 const deleteStream = function (id) {
-	if (sessions[id].announce) {
+	if (sessions[id] && sessions[id].announce) {
 		announceStream(
 			sessions[id].raw,
 			sessions[id].origin.address,

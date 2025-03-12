@@ -41,6 +41,24 @@
 		>
 			<i class="bi bi-floppy2-fill"></i>
 		</button>
+		<button
+			class="btn btn-sm btn-danger"
+			style="float: right"
+			v-if="page === 'stream' && selectedStream.manual"
+			title="Delete Stream"
+			@click="deleteStream(selectedStream.id)"
+		>
+			<i class="bi bi-trash3-fill"></i>
+		</button>
+		<button
+			class="btn btn-sm btn-primary me-2"
+			style="float: right"
+			v-if="page === 'stream'"
+			title="Copy SDP to Clipboard"
+			@click="copyClip(selectedStream.raw)"
+		>
+			<i class="bi bi-copy"></i>
+		</button>
 	</div>
 </template>
 
@@ -56,6 +74,7 @@ import {
 	persistentData,
 	saveSDP,
 	rawSDP,
+	selectedStream,
 } from "../app.js";
 
 export default {
@@ -72,7 +91,17 @@ export default {
 			goBack,
 			saveSDP,
 			rawSDP,
+			selectedStream,
 		};
+	},
+	methods: {
+		deleteStream(id) {
+			window.electronAPI.sendMessage({ type: "delete", data: id });
+			page.value = "streams";
+		},
+		copyClip(sdp) {
+			navigator.clipboard.writeText(sdp);
+		},
 	},
 };
 </script>

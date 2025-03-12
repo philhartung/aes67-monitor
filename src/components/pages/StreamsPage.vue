@@ -48,7 +48,6 @@
 				<th v-if="streamCount > 0">Channel</th>
 				<th></th>
 				<th></th>
-				<th></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -77,11 +76,32 @@
 						>
 					</td>
 					<td>
-						<span class="badge bg-primary me-1" v-if="stream.dante">Dante</span>
-						<span class="badge bg-primary me-1" v-if="stream.manual"
+						<span
+							class="badge bg-primary me-1"
+							title="Dante device"
+							v-if="stream.dante"
+							>Dante</span
+						>
+						<span
+							class="badge bg-primary me-1"
+							title="ST 2022-7 redundant stream"
+							v-if="
+								stream.groups &&
+								stream.groups[0] &&
+								stream.groups[0].type == 'DUP'
+							"
+							>2022-7</span
+						>
+						<span
+							class="badge bg-secondary me-1"
+							title="Manually added stream"
+							v-if="stream.manual"
 							>Manual</span
 						>
-						<span class="badge bg-primary me-1" v-if="stream.announce"
+						<span
+							class="badge bg-secondary me-1"
+							title="Stream is broadcasted on the network via SAP"
+							v-if="stream.announce"
 							>SAP</span
 						>
 					</td>
@@ -129,21 +149,13 @@
 							@click="playStream(stream)"
 							v-if="stream.isSupported"
 						>
-							{{ stream.id === playing ? "Stop" : "Play" }}
+							<i v-if="stream.id === playing" class="bi bi-stop-fill"></i>
+							<i v-else class="bi bi-play-fill"></i>
 						</button>
 					</td>
 					<td>
 						<button class="btn btn-sm btn-primary" @click="viewStream(stream)">
-							View
-						</button>
-					</td>
-					<td>
-						<button
-							class="btn btn-sm btn-danger"
-							v-if="stream.manual"
-							@click="deleteStream(stream.id)"
-						>
-							Delete
+							<i class="bi bi-info-circle-fill"></i>
 						</button>
 					</td>
 				</tr>
@@ -202,6 +214,7 @@ export default {
 					if (stream.dante) tags += "Dante ";
 					if (stream.manual) tags += "Manual ";
 					if (stream.announce) tags += "SAP ";
+					if (stream.groups && stream.groups[0] && stream.groups[0].type == 'DUP') tags += "2022-7 ";
 					return tags.trim();
 				default:
 					return stream[key];
@@ -238,11 +251,6 @@ export default {
 			persistentData,
 			streamIndex,
 		};
-	},
-	methods: {
-		deleteStream(id) {
-			window.electronAPI.sendMessage({ type: "delete", data: id });
-		},
 	},
 };
 </script>
