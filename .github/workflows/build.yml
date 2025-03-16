@@ -29,7 +29,7 @@ jobs:
         run: npm install
 
       - name: Build Frontend
-        run: npm run build
+        run: npx vue-cli-service build
 
       - name: Package App
         run: npx electron-builder --publish never
