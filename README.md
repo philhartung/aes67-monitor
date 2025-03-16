@@ -1,6 +1,6 @@
 # Stream Monitor
 
-Cross plattform Audio over IP monitoring app. The app was primarily tested in a hybrid Dante/AES67 environment. Features include:
+AES67 Stream Monitor is a cross plattform Audio over IP monitoring app. The app is tested with AES67-compatible Dante hardware. Features include:
 
 - Auto discovery of streams via Session Announcement Protocol and manually adding streams by pasting SDP data
 - Filter and sort streams
@@ -9,9 +9,9 @@ Cross plattform Audio over IP monitoring app. The app was primarily tested in a 
 - Settings for Network interface, audio device, buffering for RTP and more
 
 Here are some screenshots of how the app looks:
-![Screenshot](.doc/streams.png "Screenshot")
-![Screenshot](.doc/details.png "Screenshot details")
-![Screenshot](.doc/settings.png "Screenshot settings")
+![Screenshot](.doc/streams.png "Screenshot of streams overview page")
+![Screenshot](.doc/details.png "Screenshot of stream details page")
+![Screenshot](.doc/settings.png "Screenshot of settings page")
 
 ## Installation
 
@@ -27,23 +27,25 @@ After installation you can start the app with `npm start`.
 
 ## Building
 
-To build a binary for your system, first install the app and then run:
+Refer to the [Installation](#installation) section for setup instructions. After a successful installation, build the binary for your system by running:
 
 ```
 npm run build
 ```
 
-This will create a folder for your platform and CPU architecture, containing the binary.
+This will create the binaries for the current platform (MacOS, Windows, Linux).
 
 ## Development
 
-### Compiles and hot-reloads for development
+### Compiles and hot-reloads frontend for development
 
 ```
 npm run serve
 ```
 
-### Compiles and start electron for development
+### Start electron for development
+
+You will have to run `npm run serve` too for the frontend.
 
 ```
 npm start

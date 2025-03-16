@@ -214,7 +214,12 @@ export default {
 					if (stream.dante) tags += "Dante ";
 					if (stream.manual) tags += "Manual ";
 					if (stream.announce) tags += "SAP ";
-					if (stream.groups && stream.groups[0] && stream.groups[0].type == 'DUP') tags += "2022-7 ";
+					if (
+						stream.groups &&
+						stream.groups[0] &&
+						stream.groups[0].type == "DUP"
+					)
+						tags += "2022-7 ";
 					return tags.trim();
 				default:
 					return stream[key];

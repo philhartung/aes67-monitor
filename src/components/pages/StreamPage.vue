@@ -29,9 +29,9 @@
 						selectedStream.dante ||
 						selectedStream.manual ||
 						selectedStream.announce ||
-						(stream.groups &&
-							stream.groups[0] &&
-							stream.groups[0].type == 'DUP') ||
+						(selectedStream.groups &&
+							selectedStream.groups[0] &&
+							selectedStream.groups[0].type == 'DUP') ||
 						!selectedStream.isSupported
 					"
 				>
@@ -126,7 +126,7 @@
 						</li>
 						<li v-if="media.ptime">
 							<b>Packet Time</b><br />
-							<span class="copy">{{ media.ptime }}s</span>
+							<span class="copy">{{ media.ptime }}ms</span>
 						</li>
 						<li v-if="media.description">
 							<b>Description</b><br />
