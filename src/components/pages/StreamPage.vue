@@ -163,4 +163,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+li > span {
+	word-wrap: break-word;
+}
+</style>

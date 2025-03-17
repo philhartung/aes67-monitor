@@ -15,12 +15,6 @@
 						{{ sortOrder === 1 ? "▲" : "▼" }}
 					</span>
 				</th>
-				<th @click="setSort('mcast')" style="cursor: pointer">
-					Multicast
-					<span v-if="sortKey === 'mcast'">
-						{{ sortOrder === 1 ? "▲" : "▼" }}
-					</span>
-				</th>
 				<th @click="setSort('tags')" style="cursor: pointer">
 					Tags
 					<span v-if="sortKey === 'tags'">
@@ -45,6 +39,12 @@
 						{{ sortOrder === 1 ? "▲" : "▼" }}
 					</span>
 				</th>
+				<th @click="setSort('mcast')" style="cursor: pointer">
+					Multicast
+					<span v-if="sortKey === 'mcast'">
+						{{ sortOrder === 1 ? "▲" : "▼" }}
+					</span>
+				</th>
 				<th v-if="streamCount > 0">Channel</th>
 				<th></th>
 				<th></th>
@@ -54,27 +54,6 @@
 			<template v-for="stream in sortedStreams" :key="stream.id">
 				<tr>
 					<td>{{ stream.name }}</td>
-					<td>
-						<span
-							v-if="stream.media.length > 1 && stream.isSupported"
-							class="copy"
-						>
-							<select
-								class="form-select form-select-sm"
-								v-model="streamIndex[stream.id]"
-								:disabled="stream.id === playing"
-							>
-								<template v-for="(media, index) in stream.media" :key="index">
-									<option :value="index">
-										{{ media.connection.ip.split("/")[0] }}:{{ media.port }}
-									</option>
-								</template>
-							</select>
-						</span>
-						<span v-else class="copy"
-							>{{ stream.mcast }}:{{ stream.media[0].port }}</span
-						>
-					</td>
 					<td>
 						<span
 							class="badge bg-primary me-1"
@@ -116,6 +95,27 @@
 							{{ stream.codec }} / {{ stream.samplerate }}Hz /
 							{{ stream.channels }}
 						</span>
+					</td>
+					<td>
+						<span
+							v-if="stream.media.length > 1 && stream.isSupported"
+							class="copy"
+						>
+							<select
+								class="form-select form-select-sm"
+								v-model="streamIndex[stream.id]"
+								:disabled="stream.id === playing"
+							>
+								<template v-for="(media, index) in stream.media" :key="index">
+									<option :value="index">
+										{{ media.connection.ip.split("/")[0] }}:{{ media.port }}
+									</option>
+								</template>
+							</select>
+						</span>
+						<span v-else class="copy"
+							>{{ stream.mcast }}:{{ stream.media[0].port }}</span
+						>
 					</td>
 					<td v-if="streamCount > 0">
 						<select
