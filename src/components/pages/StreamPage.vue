@@ -107,6 +107,10 @@
 								>{{ selectedStream.mcast }}:{{ media.port }}</span
 							>
 						</li>
+						<li v-if="media.sourceFilter && media.sourceFilter.srcList">
+							<b>Source Filter</b><br />
+							<span class="copy">{{ media.sourceFilter.srcList }}</span>
+						</li>
 						<li>
 							<b>Format</b><br />
 							<span class="copy"
