@@ -1,14 +1,14 @@
 # Stream Monitor
 
-AES67 Stream Monitor is a cross plattform Audio over IP monitoring app. The app is tested with AES67-compatible Dante hardware. Features include:
+AES67 Stream Monitor is a cross-platform Audio-over-IP monitoring application designed for live sound, studio, and broadcast environments. Tested with AES67-compatible Dante hardware, it offers a comprehensive set of features for managing and analyzing Audio-over-IP streams:
 
-- Auto discovery of streams via Session Announcement Protocol and manually adding streams by pasting SDP data
-- Filter and sort streams
-- listen to streams by selecting which channels you want to listen to (Stereo and Mono supported)
-- wide format support: 44100Hz, 48000Hz and 96000Hz (and more) if the soundcard supports it, L16 and L24 PCM with up to 64 channels and all packet times according to AES67 spec are supported
-- Settings for Network interface, audio device, buffering for RTP and more
+- **Extensive Format Support:** Supports the full range of audio formats as defined by the AES67, RAVENNA, and ST 2110-30 standards — delivering uncompressed L16 and L24 PCM audio across up to 64 channels, with various sampling rates (48000Hz, 96000Hz, and more) and all packet times specified by these standards, subject to your soundcard’s capabilities.
+- **Automatic Discovery:** Detects AES67 streams automatically via the Session Announcement Protocol. Additionally, users can manually add streams by adding raw SDP data.
+- **Stream Filtering and Sorting:** Easily filter and sort streams to quickly locate the channels you need.
+- **Selective Channel Listening:** Choose specific channels to listen to, with support for both stereo pairs and individual mono channels.
+- **Customizable Settings:** Configure network interfaces, audio devices, RTP buffering, and other parameters.
 
-Here are some screenshots of how the app looks:
+Below are some screenshots showcasing the application's interface:
 ![Screenshot](.doc/streams.png "Screenshot of streams overview page")
 ![Screenshot](.doc/details.png "Screenshot of stream details page")
 ![Screenshot](.doc/settings.png "Screenshot of settings page")
@@ -21,9 +21,7 @@ cd aes67-monitor
 npm install
 ```
 
-The app should then be installed. Audify (audio backend used) prebuilds are available for most major platforms and Node versions. If you need to build Audify from source, see https://github.com/almogh52/audify#requirements-for-source-build.
-
-After installation you can start the app with `npm start`.
+This installs all dependencies for your platform. Audify (the audio backend used) prebuilds are available for most major platforms and NodeJS versions. If you need to build Audify from source, see [Build Audify from Source](https://github.com/almoghamdani/audify#requirements-for-source-build).
 
 ## Building
 
