@@ -29,13 +29,25 @@ const start = function (args) {
 
 	// Constants
 	const bufferSize = 1024;
-	const jitterBufferSize = args.jitterBufferEnabled ? args.jitterBufferSize : 0;
 	const samplesPerPacket = Math.round((args.samplerate / 1000) * args.ptime);
 	const bytesPerSample = args.codec == "L24" ? 3 : 2;
 	const pcmDataSize = samplesPerPacket * bytesPerSample * args.channels;
 	const pcmL16out = Buffer.alloc(samplesPerPacket * 4 * bufferSize);
 
+	let jitterBufferSize = args.jitterBufferEnabled ? args.jitterBufferSize : 0;
+	let outSampleFactor = 1;
 	let seqInternal = -1;
+
+	while(samplesPerPacket * outSampleFactor < 24) {
+		outSampleFactor++;
+	}
+
+	console.log('Output sample factor:', outSampleFactor);
+
+	if(outSampleFactor > 1 && outSampleFactor > jitterBufferSize) {
+		jitterBufferSize = outSampleFactor;
+		console.log('Increasing jitter buffer size', jitterBufferSize);
+	}
 
 	client.on("message", function (buffer, remote) {
 		const firstByte = buffer.readUInt8(0);
@@ -75,18 +87,20 @@ const start = function (args) {
 		}
 
 		if (seqInternal != -1) {
-			let bufferIndex = seqInternal * samplesPerPacket * 4;
-			let outBuf = pcmL16out.subarray(
-				bufferIndex,
-				bufferIndex + samplesPerPacket * 4
-			);
-			rtAudio.write(outBuf);
+			if((outSampleFactor == 1 || seqInternal % outSampleFactor == 0)) {
+				let bufferIndex = seqInternal * samplesPerPacket * 4;
+				let outBuf = pcmL16out.subarray(
+					bufferIndex,
+					bufferIndex + samplesPerPacket * 4 * outSampleFactor
+				);
+				rtAudio.write(outBuf);
+			}
 			seqInternal = (seqInternal + 1) % bufferSize;
 		} else {
 			seqInternal = (seqNum - jitterBufferSize) % bufferSize;
 
 			for (var j = 0; j < jitterBufferSize; j++) {
-				rtAudio.write(Buffer.alloc(samplesPerPacket * 4));
+				rtAudio.write(Buffer.alloc(samplesPerPacket * 4 * outSampleFactor));
 			}
 		}
 	});
@@ -125,7 +139,7 @@ const start = function (args) {
 			null,
 			RtAudioFormat.RTAUDIO_SINT16,
 			args.samplerate,
-			samplesPerPacket,
+			samplesPerPacket * outSampleFactor,
 			"AES67 Monitor"
 		);
 		rtAudio.start();
@@ -133,7 +147,7 @@ const start = function (args) {
 		console.error("Error during stream setup:", error);
 	}
 
-	client.bind(5004);
+	client.bind(args.port);
 	streamOpen = true;
 };
 

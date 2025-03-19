@@ -95,6 +95,10 @@
 							<b>Stream Identification</b><br />
 							<span class="copy">{{ media.mid }}</span>
 						</li>
+						<li>
+							<b>Protocol</b><br />
+							<span class="copy">{{ media.protocol }} - {{ media.payloads }}</span>
+						</li>
 						<li v-if="media.connection && media.connection.ip">
 							<b>Address</b><br />
 							<span class="copy"
