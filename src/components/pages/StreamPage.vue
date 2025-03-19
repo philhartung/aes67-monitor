@@ -97,7 +97,9 @@
 						</li>
 						<li>
 							<b>Protocol</b><br />
-							<span class="copy">{{ media.protocol }} - {{ media.payloads }}</span>
+							<span class="copy"
+								>{{ media.protocol }} - {{ media.payloads }}</span
+							>
 						</li>
 						<li v-if="media.connection && media.connection.ip">
 							<b>Address</b><br />

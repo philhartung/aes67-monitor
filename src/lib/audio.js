@@ -38,15 +38,15 @@ const start = function (args) {
 	let outSampleFactor = 1;
 	let seqInternal = -1;
 
-	while(samplesPerPacket * outSampleFactor < 24) {
+	while (samplesPerPacket * outSampleFactor < 24) {
 		outSampleFactor++;
 	}
 
-	console.log('Output sample factor:', outSampleFactor);
+	console.log("Output sample factor:", outSampleFactor);
 
-	if(outSampleFactor > 1 && outSampleFactor > jitterBufferSize) {
+	if (outSampleFactor > 1 && outSampleFactor > jitterBufferSize) {
 		jitterBufferSize = outSampleFactor;
-		console.log('Increasing jitter buffer size', jitterBufferSize);
+		console.log("Increasing jitter buffer size", jitterBufferSize);
 	}
 
 	client.on("message", function (buffer, remote) {
@@ -87,7 +87,7 @@ const start = function (args) {
 		}
 
 		if (seqInternal != -1) {
-			if((outSampleFactor == 1 || seqInternal % outSampleFactor == 0)) {
+			if (outSampleFactor == 1 || seqInternal % outSampleFactor == 0) {
 				let bufferIndex = seqInternal * samplesPerPacket * 4;
 				let outBuf = pcmL16out.subarray(
 					bufferIndex,
