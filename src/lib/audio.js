@@ -38,7 +38,7 @@ const start = function (args) {
 	let outSampleFactor = 1;
 	let seqInternal = -1;
 
-	while (samplesPerPacket * outSampleFactor < 24) {
+	while (samplesPerPacket * outSampleFactor < 48) { // Play it safe and write 48 samples at minimum
 		outSampleFactor++;
 	}
 
