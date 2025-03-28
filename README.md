@@ -55,3 +55,45 @@ npm start
 npm run lint
 npm run format
 ```
+
+## Testing
+
+New releases of the AES67 Stream Monitor are tested using both AES67-compliant hardware and software to ensure reliable stream discovery and accurate audio playback.
+
+### Hardware
+
+The following hardware devices are used during testing:
+
+| Manufacturer | Device                    | Protocol    | Codec | Sample Rate | Channels | Packet Time |
+| ------------ | ------------------------- | ----------- | ----- | ----------- | -------- | ----------- |
+| Audinate     | AVIO USB-C                | Dante AES67 | L24   | 48 kHz      | 1–2      | 1 ms        |
+| Blackmagic   | 2110 IP Mini BiDirect 12G | ST 2110-30  | L24   | 48 kHz      | 2–16     | 0.125 ms    |
+
+### Software-Generated Streams
+
+GStreamer is used to generate AES67-compliant RTP streams with the following configurations:
+
+| Codec | Sample Rate | Channels | Packet Time |
+| ----- | ----------- | -------- | ----------- |
+| L16   | 48 kHz      | 1        | 0.125 ms    |
+| L16   | 48 kHz      | 1        | 1 ms        |
+| L16   | 48 kHz      | 8        | 0.125 ms    |
+| L16   | 48 kHz      | 8        | 1 ms        |
+| L16   | 48 kHz      | 64       | 0.125 ms    |
+| L16   | 96 kHz      | 1        | 0.125 ms    |
+| L16   | 96 kHz      | 1        | 1 ms        |
+| L16   | 96 kHz      | 4        | 1 ms        |
+| L16   | 96 kHz      | 8        | 0.125 ms    |
+| L16   | 96 kHz      | 32       | 0.125 ms    |
+| L24   | 48 kHz      | 1        | 0.125 ms    |
+| L24   | 48 kHz      | 1        | 1 ms        |
+| L24   | 48 kHz      | 8        | 0.125 ms    |
+| L24   | 48 kHz      | 8        | 1 ms        |
+| L24   | 48 kHz      | 64       | 0.125 ms    |
+| L24   | 96 kHz      | 1        | 0.125 ms    |
+| L24   | 96 kHz      | 1        | 1 ms        |
+| L24   | 96 kHz      | 4        | 1 ms        |
+| L24   | 96 kHz      | 8        | 0.125 ms    |
+| L24   | 96 kHz      | 32       | 0.125 ms    |
+
+For details on the software testing implementation and SDP files, please refer to [philhartung/aoip-tester](https://github.com/philhartung/aoip-tester).
