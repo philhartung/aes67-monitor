@@ -64,10 +64,10 @@ New releases of the AES67 Stream Monitor are tested using both AES67-compliant h
 
 The following hardware devices are used during testing:
 
-| Manufacturer | Device                    | Protocol    | Codec | Sample Rate | Channels | Packet Time |
-| ------------ | ------------------------- | ----------- | ----- | ----------- | -------- | ----------- |
-| Audinate     | AVIO USB-C                | Dante AES67 | L24   | 48 kHz      | 1–2      | 1 ms        |
-| Blackmagic   | 2110 IP Mini BiDirect 12G | ST 2110-30  | L24   | 48 kHz      | 2–16     | 0.125 ms    |
+| Manufacturer | Device                    | AoIP Protocol | Discovery                                            | Codec | Sample Rate | Channels | Packet Time |
+| ------------ | ------------------------- | ------------- | ---------------------------------------------------- | ----- | ----------- | -------- | ----------- |
+| Audinate     | AVIO USB-C                | Dante AES67   | [SAP](https://datatracker.ietf.org/doc/html/rfc2974) | L24   | 48 kHz      | 1–2      | 1 ms        |
+| Blackmagic   | 2110 IP Mini BiDirect 12G | ST 2110-30    | [NMOS](https://specs.amwa.tv/nmos/)                  | L24   | 48 kHz      | 2–16     | 0.125 ms    |
 
 ### Software-Generated Streams
 
