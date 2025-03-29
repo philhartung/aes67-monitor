@@ -1,5 +1,9 @@
 # Stream Monitor
 
+[![GitHub](https://img.shields.io/github/stars/philhartung/aes67-monitor?style=flat&label=GitHub%20%E2%AD%90)](https://github.com/philhartung/aes67-monitor)
+[![license](https://img.shields.io/github/license/philhartung/aes67-monitor.svg)](https://github.com/philhartung/aes67-monitor?tab=MIT-1-ov-file)
+[![release](https://img.shields.io/github/v/release/philhartung/aes67-monitor?display_name=tag)](https://github.com/philhartung/aes67-monitor/releases/latest)
+
 AES67 Stream Monitor is a cross-platform Audio-over-IP monitoring application designed for live sound, studio, and broadcast environments. Tested with AES67-compatible Dante hardware, it offers a comprehensive set of features for managing and analyzing Audio-over-IP streams:
 
 - **Extensive Format Support:** Supports the full range of audio formats as defined by the AES67, RAVENNA, and ST 2110-30 standards — delivering uncompressed L16 and L24 PCM audio across up to 64 channels, with various sampling rates (48000Hz, 96000Hz, and more) and all packet times specified by these standards, subject to your soundcard’s capabilities.
@@ -75,32 +79,31 @@ The following hardware devices are used during testing:
 
 GStreamer is used to generate AES67-compliant RTP streams with the following configurations:
 
-|  Codec  |  Sample Rate  |  Channels  |  Packet Time  |
-| ------- | ------------- | ---------- | ------------- |
-|  L16    |  44.1 kHz     |  1         |  1 ms         |
-|  L16    |  44.1 kHz     |  8         |  1 ms         |
-|  L16    |  48 kHz       |  1         |  0.125 ms     |
-|  L16    |  48 kHz       |  1         |  1 ms         |
-|  L16    |  48 kHz       |  8         |  0.125 ms     |
-|  L16    |  48 kHz       |  8         |  1 ms         |
-|  L16    |  48 kHz       |  64        |  0.125 ms     |
-|  L16    |  96 kHz       |  1         |  0.125 ms     |
-|  L16    |  96 kHz       |  1         |  1 ms         |
-|  L16    |  96 kHz       |  4         |  1 ms         |
-|  L16    |  96 kHz       |  8         |  0.125 ms     |
-|  L16    |  96 kHz       |  32        |  0.125 ms     |
-|  L24    |  44.1 kHz     |  1         |  1 ms         |
-|  L24    |  44.1 kHz     |  8         |  1 ms         |
-|  L24    |  48 kHz       |  1         |  0.125 ms     |
-|  L24    |  48 kHz       |  1         |  1 ms         |
-|  L24    |  48 kHz       |  8         |  0.125 ms     |
-|  L24    |  48 kHz       |  8         |  1 ms         |
-|  L24    |  48 kHz       |  64        |  0.125 ms     |
-|  L24    |  96 kHz       |  1         |  0.125 ms     |
-|  L24    |  96 kHz       |  1         |  1 ms         |
-|  L24    |  96 kHz       |  4         |  1 ms         |
-|  L24    |  96 kHz       |  8         |  0.125 ms     |
-|  L24    |  96 kHz       |  32        |  0.125 ms     |
-
+| Codec | Sample Rate | Channels | Packet Time |
+| ----- | ----------- | -------- | ----------- |
+| L16   | 44.1 kHz    | 1        | 1 ms        |
+| L16   | 44.1 kHz    | 8        | 1 ms        |
+| L16   | 48 kHz      | 1        | 0.125 ms    |
+| L16   | 48 kHz      | 1        | 1 ms        |
+| L16   | 48 kHz      | 8        | 0.125 ms    |
+| L16   | 48 kHz      | 8        | 1 ms        |
+| L16   | 48 kHz      | 64       | 0.125 ms    |
+| L16   | 96 kHz      | 1        | 0.125 ms    |
+| L16   | 96 kHz      | 1        | 1 ms        |
+| L16   | 96 kHz      | 4        | 1 ms        |
+| L16   | 96 kHz      | 8        | 0.125 ms    |
+| L16   | 96 kHz      | 32       | 0.125 ms    |
+| L24   | 44.1 kHz    | 1        | 1 ms        |
+| L24   | 44.1 kHz    | 8        | 1 ms        |
+| L24   | 48 kHz      | 1        | 0.125 ms    |
+| L24   | 48 kHz      | 1        | 1 ms        |
+| L24   | 48 kHz      | 8        | 0.125 ms    |
+| L24   | 48 kHz      | 8        | 1 ms        |
+| L24   | 48 kHz      | 64       | 0.125 ms    |
+| L24   | 96 kHz      | 1        | 0.125 ms    |
+| L24   | 96 kHz      | 1        | 1 ms        |
+| L24   | 96 kHz      | 4        | 1 ms        |
+| L24   | 96 kHz      | 8        | 0.125 ms    |
+| L24   | 96 kHz      | 32       | 0.125 ms    |
 
 For details on the software testing implementation and SDP files, please refer to [philhartung/aoip-tester](https://github.com/philhartung/aoip-tester).
