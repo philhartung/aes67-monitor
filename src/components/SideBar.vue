@@ -18,7 +18,7 @@
 						class="badge bg-primary"
 						@click.stop="streamCountDisplay = !streamCountDisplay"
 					>
-						<template v-if="streamCountDisplay">{{ streamCount }}</template>
+						<template v-if="streamCountDisplay">{{ visibleStreams }}</template>
 						<template v-else>{{ channelCount }}</template>
 					</span>
 				</a>
@@ -63,9 +63,9 @@ import {
 	channelCount,
 	getPageTitle,
 	setSidebarStatus,
-	streamCount,
 	isDevMode,
 	searchDevices,
+	visibleStreams,
 } from "../app.js";
 
 export default {
@@ -79,9 +79,9 @@ export default {
 			channelCount,
 			getPageTitle,
 			setSidebarStatus,
-			streamCount,
 			isDevMode,
 			searchDevices,
+			visibleStreams,
 		};
 	},
 };
