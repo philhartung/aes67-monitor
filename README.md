@@ -73,27 +73,32 @@ The following hardware devices are used during testing:
 
 GStreamer is used to generate AES67-compliant RTP streams with the following configurations:
 
-| Codec | Sample Rate | Channels | Packet Time |
-| ----- | ----------- | -------- | ----------- |
-| L16   | 48 kHz      | 1        | 0.125 ms    |
-| L16   | 48 kHz      | 1        | 1 ms        |
-| L16   | 48 kHz      | 8        | 0.125 ms    |
-| L16   | 48 kHz      | 8        | 1 ms        |
-| L16   | 48 kHz      | 64       | 0.125 ms    |
-| L16   | 96 kHz      | 1        | 0.125 ms    |
-| L16   | 96 kHz      | 1        | 1 ms        |
-| L16   | 96 kHz      | 4        | 1 ms        |
-| L16   | 96 kHz      | 8        | 0.125 ms    |
-| L16   | 96 kHz      | 32       | 0.125 ms    |
-| L24   | 48 kHz      | 1        | 0.125 ms    |
-| L24   | 48 kHz      | 1        | 1 ms        |
-| L24   | 48 kHz      | 8        | 0.125 ms    |
-| L24   | 48 kHz      | 8        | 1 ms        |
-| L24   | 48 kHz      | 64       | 0.125 ms    |
-| L24   | 96 kHz      | 1        | 0.125 ms    |
-| L24   | 96 kHz      | 1        | 1 ms        |
-| L24   | 96 kHz      | 4        | 1 ms        |
-| L24   | 96 kHz      | 8        | 0.125 ms    |
-| L24   | 96 kHz      | 32       | 0.125 ms    |
+|  Codec  |  Sample Rate  |  Channels  |  Packet Time  |
+| ------- | ------------- | ---------- | ------------- |
+|  L16    |  44.1 kHz     |  1         |  1 ms         |
+|  L16    |  44.1 kHz     |  8         |  1 ms         |
+|  L16    |  48 kHz       |  1         |  0.125 ms     |
+|  L16    |  48 kHz       |  1         |  1 ms         |
+|  L16    |  48 kHz       |  8         |  0.125 ms     |
+|  L16    |  48 kHz       |  8         |  1 ms         |
+|  L16    |  48 kHz       |  64        |  0.125 ms     |
+|  L16    |  96 kHz       |  1         |  0.125 ms     |
+|  L16    |  96 kHz       |  1         |  1 ms         |
+|  L16    |  96 kHz       |  4         |  1 ms         |
+|  L16    |  96 kHz       |  8         |  0.125 ms     |
+|  L16    |  96 kHz       |  32        |  0.125 ms     |
+|  L24    |  44.1 kHz     |  1         |  1 ms         |
+|  L24    |  44.1 kHz     |  8         |  1 ms         |
+|  L24    |  48 kHz       |  1         |  0.125 ms     |
+|  L24    |  48 kHz       |  1         |  1 ms         |
+|  L24    |  48 kHz       |  8         |  0.125 ms     |
+|  L24    |  48 kHz       |  8         |  1 ms         |
+|  L24    |  48 kHz       |  64        |  0.125 ms     |
+|  L24    |  96 kHz       |  1         |  0.125 ms     |
+|  L24    |  96 kHz       |  1         |  1 ms         |
+|  L24    |  96 kHz       |  4         |  1 ms         |
+|  L24    |  96 kHz       |  8         |  0.125 ms     |
+|  L24    |  96 kHz       |  32        |  0.125 ms     |
+
 
 For details on the software testing implementation and SDP files, please refer to [philhartung/aoip-tester](https://github.com/philhartung/aoip-tester).
