@@ -15,6 +15,10 @@ Below are some screenshots showcasing the application's interface:
 
 ## Installation
 
+See the [lastest release](https://github.com/philhartung/aes67-monitor/releases/latest) for ready-to-use binaries for MacOS, Windows and Linux. Please note that the binaries are currently not signed.
+
+## Installation and Building from source
+
 ```
 git clone https://github.com/philhartung/aes67-monitor.git
 cd aes67-monitor
@@ -23,9 +27,7 @@ npm install
 
 This installs all dependencies for your platform. Audify (the audio backend used) prebuilds are available for most major platforms and NodeJS versions. If you need to build Audify from source, see [Build Audify from Source](https://github.com/almoghamdani/audify#requirements-for-source-build).
 
-## Building
-
-Refer to the [Installation](#installation) section for setup instructions. After a successful installation, build the binary for your system by running:
+After a successful installation, build the binary for your system by running:
 
 ```
 npm run build
