@@ -288,6 +288,8 @@ setInterval(function () {
 			);
 		}
 	}
+
+	sendUpdate();
 }, 30 * 1000);
 
 process.on("message", (message) => {
