@@ -20,7 +20,6 @@ import Streams from "./components/pages/StreamsPage.vue";
 import Stream from "./components/pages/StreamPage.vue";
 import Devices from "./components/pages/DevicesPage.vue";
 import Interfaces from "./components/pages/InterfacesPage.vue";
-import Intercom from "./components/pages/IntercomPage.vue";
 import Settings from "./components/pages/SettingsPage.vue";
 import Sdp from "./components/pages/SdpPage.vue";
 
@@ -46,8 +45,6 @@ const currentComponent = computed(() => {
 			return Devices;
 		case "interfaces":
 			return Interfaces;
-		case "intercom":
-			return Intercom;
 		case "settings":
 			return Settings;
 		case "stream":

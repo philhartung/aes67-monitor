@@ -36,15 +36,6 @@
 					<i class="bi bi-pci-card-sound"></i><span>Interfaces</span>
 				</a>
 			</li>
-			<li
-				id="intercom-li"
-				:class="{ active: page === 'intercom' }"
-				v-if="isDevMode()"
-			>
-				<a @click="viewPage('intercom')">
-					<i class="bi bi-headset"></i><span>Intercom</span>
-				</a>
-			</li>
 			<li id="settings-li" :class="{ active: page === 'settings' }">
 				<a @click="viewPage('settings')">
 					<i class="bi bi-gear"></i><span>Settings</span>
@@ -63,7 +54,6 @@ import {
 	channelCount,
 	getPageTitle,
 	setSidebarStatus,
-	isDevMode,
 	searchDevices,
 	visibleStreams,
 } from "../app.js";
@@ -79,7 +69,6 @@ export default {
 			channelCount,
 			getPageTitle,
 			setSidebarStatus,
-			isDevMode,
 			searchDevices,
 			visibleStreams,
 		};
