@@ -101,7 +101,11 @@ const start = function (args) {
 			seqInternal = (seqNum - jitterBufferSize) % bufferSize;
 
 			for (var j = 0; j < jitterBufferSize; j++) {
-				rtAudio.write(Buffer.alloc(samplesPerPacket * 4 * outSampleFactor));
+				try {
+					rtAudio.write(Buffer.alloc(samplesPerPacket * 4 * outSampleFactor));
+				} catch (error) {
+					console.error("Error writing sample:", error);
+				}
 			}
 		}
 	});
@@ -144,12 +148,11 @@ const start = function (args) {
 			"AES67 Monitor"
 		);
 		rtAudio.start();
+		client.bind(args.port);
+		streamOpen = true;
 	} catch (error) {
 		console.error("Error during stream setup:", error);
 	}
-
-	client.bind(args.port);
-	streamOpen = true;
 };
 
 const restart = (args) => {

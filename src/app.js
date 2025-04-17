@@ -173,6 +173,17 @@ export const getAudioOutputDevices = () => {
 	});
 };
 
+export const getCurrentAudioOutput = () => {
+	return audioInterfaces.value.filter((device) => {
+		return device.outputChannels > 0 && device.isCurrent;
+	});
+};
+
+export const getCurrentSupportedSampleRates = () => {
+	let currentDevice = getCurrentAudioOutput();
+	return currentDevice.length > 0 ? currentDevice[0].sampleRates : [];
+};
+
 export const getAudioInputDevices = () => {
 	return audioInterfaces.value.filter((device) => {
 		return device.inputChannels > 0;

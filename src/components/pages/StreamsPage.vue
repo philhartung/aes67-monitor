@@ -148,6 +148,9 @@
 							}"
 							@click="playStream(stream)"
 							v-if="stream.isSupported"
+							:disabled="
+								!getCurrentSupportedSampleRates().includes(stream.samplerate)
+							"
 						>
 							<i v-if="stream.id === playing" class="bi bi-stop-fill"></i>
 							<i v-else class="bi bi-play-fill"></i>
@@ -177,6 +180,7 @@ import {
 	playing,
 	persistentData,
 	streamIndex,
+	getCurrentSupportedSampleRates,
 } from "../../app.js";
 import { ref, computed } from "vue";
 
@@ -255,6 +259,7 @@ export default {
 			playing,
 			persistentData,
 			streamIndex,
+			getCurrentSupportedSampleRates,
 		};
 	},
 };
