@@ -85,6 +85,8 @@ GStreamer is used to generate AES67-compliant RTP streams with the following con
 | L16   | 44.1 kHz    | 8        | 1 ms        |
 | L16   | 48 kHz      | 1        | 0.125 ms    |
 | L16   | 48 kHz      | 1        | 1 ms        |
+| L16   | 48 kHz      | 2        | 4 ms        |
+| L16   | 48 kHz      | 4        | 2 ms        |
 | L16   | 48 kHz      | 8        | 0.125 ms    |
 | L16   | 48 kHz      | 8        | 1 ms        |
 | L16   | 48 kHz      | 64       | 0.125 ms    |
@@ -97,6 +99,8 @@ GStreamer is used to generate AES67-compliant RTP streams with the following con
 | L24   | 44.1 kHz    | 8        | 1 ms        |
 | L24   | 48 kHz      | 1        | 0.125 ms    |
 | L24   | 48 kHz      | 1        | 1 ms        |
+| L24   | 48 kHz      | 2        | 4 ms        |
+| L24   | 48 kHz      | 4        | 2 ms        |
 | L24   | 48 kHz      | 8        | 0.125 ms    |
 | L24   | 48 kHz      | 8        | 1 ms        |
 | L24   | 48 kHz      | 64       | 0.125 ms    |
