@@ -213,10 +213,13 @@ function updateNetworkInterfaces() {
 			addresses[0].isCurrent = true;
 			store.set("interface", currentNetworkInterface);
 			audioProcess.send({ type: "stop" });
-			sdpProcess.send({
-				type: "interface",
-				data: currentNetworkInterface.address,
-			});
+
+			if (isSDPInitialized) {
+				sdpProcess.send({
+					type: "interface",
+					data: currentNetworkInterface.address,
+				});
+			}
 		} else if (!found) {
 			console.error("No Network interfaces found");
 		}
