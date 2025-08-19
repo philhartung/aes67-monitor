@@ -1,4 +1,4 @@
-# Stream Monitor
+# AES67 Stream Monitor
 
 [![GitHub](https://img.shields.io/github/stars/philhartung/aes67-monitor?style=flat&label=GitHub%20%E2%AD%90)](https://github.com/philhartung/aes67-monitor)
 [![license](https://img.shields.io/github/license/philhartung/aes67-monitor.svg)](https://github.com/philhartung/aes67-monitor?tab=MIT-1-ov-file)
@@ -55,7 +55,7 @@ You will have to run `npm run serve` too for the frontend.
 npm start
 ```
 
-### Lints and fixes files
+### Lint and format files
 
 ```
 npm run lint
@@ -64,7 +64,7 @@ npm run format
 
 ## Testing
 
-New releases of the AES67 Stream Monitor are tested using both AES67-compliant hardware and software to ensure reliable stream discovery and accurate audio playback. Testing is primarily conducted on macOS, with additional testing performed on Windows.
+New releases of the AES67 Stream Monitor are tested using both AES67-compliant hardware and software to ensure reliable stream discovery and accurate audio playback. Testing is primarily conducted on macOS, with additional testing performed on Windows. Furthermore, new releases may be tested by [partners](#partners) on various hardware and platforms.
 
 ### Hardware
 
@@ -112,3 +112,15 @@ GStreamer is used to generate AES67-compliant RTP streams with the following con
 | L24   | 96 kHz      | 32       | 0.125 ms    |
 
 For details on the software testing implementation and SDP files, please refer to [philhartung/aoip-tester](https://github.com/philhartung/aoip-tester).
+
+## Partners
+
+This section is dedicated to partners supporting the development of AES67 Stream Monitor. Partners listed here provide resources that help advance the project in various ways. This may include testing new releases on AoIP hardware by the partner, supplying hardware for testing, or offering financial support for new features or the general development of AES67 Stream Monitor. Partners are essential to ensure that AES67 Stream Monitor works as expected and to provide critical feedback on which features are needed for wider adoption.
+
+Partners receive higher priority for bug reports & feature requests, are provided early access builds and are listed in this section. Partners also have a direct channel of communication and receive feedback on any hardware they provide for testing. If you're interested in becoming a partner, feel free to reach out via email at partners [at] aes67.app.
+
+### Current Project Partners
+
+| Partner                                                                                     | Type of Partnership | Description                                                                                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [![Hochschulradio Aachen](.doc/logo-hochschulradio.png)](https://hochschulradio-aachen.de/) | Testing & Feedback  | RWTH Aachen University's campus radio station is a founding partner and has played a key role since the beginning of the project. Every new release is tested on their hybrid Dante / AES67 network in a real-world broadcast environment. |
