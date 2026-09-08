@@ -8,28 +8,21 @@ directories:
 mac:
   icon: "icon/icon.ico"
   target:
-    - target: dmg
-      arch: [x64, arm64]
-    - target: zip
-      arch: [x64, arm64]
+    - dmg
+    - zip
 
 win:
   icon: "icon/icon.png"
   target:
-    - target: msi
-      arch: [x64]
-    - target: zip
-      arch: [x64]
+    - msi
+    - zip
 
 linux:
   icon: "icon/icon.png"
   target:
-    - target: deb
-      arch: [x64, arm64]
-    - target: rpm
-      arch: [x64, arm64]
-    - target: zip
-      arch: [x64, arm64]
+    - deb
+    - rpm
+    - zip
 
 # Target specific settings
 msi:

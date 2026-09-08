@@ -5,11 +5,31 @@ on:
     tags:
       - "*"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            arch: x64
+            build_args: --linux deb rpm zip --x64
+          - os: ubuntu-24.04-arm
+            arch: arm64
+            # electron-builder's bundled fpm is x86-only, so native ARM runners
+            # can produce the portable ZIP but not deb/rpm packages.
+            build_args: --linux zip --arm64
+          - os: windows-latest
+            arch: x64
+            build_args: --win msi zip --x64
+          - os: macos-15-intel
+            arch: x64
+            build_args: --mac dmg zip --x64
+          - os: macos-latest
+            arch: arm64
+            build_args: --mac dmg zip --arm64
 
     runs-on: ${{ matrix.os }}
 
@@ -28,16 +48,29 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Verify Linux native module architecture
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          native_module="node_modules/audify/build/Release/audify.node"
+          file "$native_module"
+
+          if [[ "${{ matrix.arch }}" == "x64" ]]; then
+            file "$native_module" | grep -q "x86-64"
+          else
+            file "$native_module" | grep -q "ARM aarch64"
+          fi
+
       - name: Build Frontend
         run: npx vue-cli-service build
 
       - name: Package App
-        run: npx electron-builder --publish never
+        run: npx electron-builder ${{ matrix.build_args }} --publish never
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Artifacts-${{ runner.os }}
+          name: Artifacts-${{ runner.os }}-${{ matrix.arch }}
           path: |
             release-builds/*.msi
             release-builds/*.zip
